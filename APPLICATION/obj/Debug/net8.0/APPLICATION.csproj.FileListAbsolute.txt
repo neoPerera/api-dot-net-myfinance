@@ -1,0 +1,15 @@
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\bin\Debug\net8.0\APPLICATION.deps.json
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\bin\Debug\net8.0\APPLICATION.dll
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\bin\Debug\net8.0\APPLICATION.pdb
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\bin\Debug\net8.0\CORE.dll
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\bin\Debug\net8.0\CORE.pdb
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICATION.csproj.AssemblyReference.cache
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICATION.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICATION.AssemblyInfoInputs.cache
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICATION.AssemblyInfo.cs
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICATION.csproj.CoreCompileInputs.cache
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICAT.4F738479.Up2Date
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICATION.dll
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\refint\APPLICATION.dll
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\APPLICATION.pdb
+C:\Users\perclk\Chanuth.Perera\PERSONAL\MYFINANCE\dotnet8\API\API\APPLICATION\obj\Debug\net8.0\ref\APPLICATION.dll

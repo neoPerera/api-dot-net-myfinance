@@ -1,0 +1,10 @@
+﻿namespace CORE.Entities
+{
+    public class Expense
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Active { get; set; }
+        public DateTime Date { get; set; }
+    }
+}
