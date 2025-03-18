@@ -493,3 +493,4 @@ $RECYCLE.BIN/
 /CORE/bin/Debug
 /INFRASTRUCTURE/bin/Debug
 /.vs/API/v17
+API/appsettings.json
