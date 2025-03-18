@@ -18,7 +18,6 @@ namespace APPLICATION.Services
 
         public async Task<List<FormResponse>> GetActiveFormsAsync(string userId)
         {
-            // Get active forms from repository
             var forms =  await _formRepository.GetActiveFormsAsync();
             var mappedforms = forms.Select(form => new FormResponse
             {
@@ -31,7 +30,6 @@ namespace APPLICATION.Services
                 str_isMenu = form.IsMenu,
                 str_active = form.Active
             }).ToList();
-
             return mappedforms; 
 
         }

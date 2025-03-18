@@ -18,15 +18,12 @@ namespace API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             var result = await _loginService.AuthenticateAsync(loginRequest.Username, loginRequest.Password);
-            // Check if the result contains a success property
             if (result.Success)
             {
-                // If authentication was successful, return Ok with the result
-                return Ok(result); // { message: "Login successful", token: "your-jwt-token" }
+                return Ok(result);
             }
             else
             {
-                // If authentication failed, return Unauthorized with the message
                 return Unauthorized(new { message = result.Message });
             }
         }

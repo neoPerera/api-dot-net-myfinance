@@ -19,10 +19,10 @@ namespace INFRASTRUCTURE.Repositories
 
         public async Task<List<Form>> GetActiveFormsAsync()
         {
-            // Query to get active forms from the tbl_forms table
+            
             return await _context.Forms
-                .Where(f => f.Active == 'Y') // Only active forms
-                .ToListAsync(); // Execute the query asynchronously
+                .Where(f => f.Active == 'Y')
+                .ToListAsync();
         }
     }
 }

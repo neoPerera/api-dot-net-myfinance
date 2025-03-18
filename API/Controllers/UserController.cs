@@ -9,9 +9,7 @@ namespace API.Controllers
         [Route("validatejwt")]
         public IActionResult ValidateJwt()
         {
-            bool isValid = true; // Assume the JWT is valid for demonstration
-
-            // Return response with isValid property
+            bool isValid = true;
             return Ok(new { isValid = isValid });
         }
     }
