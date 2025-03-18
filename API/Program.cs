@@ -1,8 +1,5 @@
-using APPLICATION.Interfaces;
-using APPLICATION.Services;
-using CORE.Interfaces;
 using INFRASTRUCTURE;
-using INFRASTRUCTURE.Repositories;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
