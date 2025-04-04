@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250316165106_MakeIconIdNullable")]
-    partial class MakeIconIdNullable
+    [Migration("20250404081015_AddStrUsersTable2")]
+    partial class AddStrUsersTable2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,12 +282,12 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("password");
+                        .HasColumnName("str_password");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("username");
+                        .HasColumnName("str_user_name");
 
                     b.HasKey("Id");
 

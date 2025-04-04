@@ -279,12 +279,12 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("password");
+                        .HasColumnName("str_password");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("username");
+                        .HasColumnName("str_user_name");
 
                     b.HasKey("Id");
 
