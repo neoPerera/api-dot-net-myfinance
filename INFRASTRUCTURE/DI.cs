@@ -18,6 +18,8 @@ namespace INFRASTRUCTURE
             services.AddScoped<IFormService, FormService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IFormRepository, FormRepository>();
+            services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IDashboardRepository, DashboardRepository>();
             return services;
         }
 
