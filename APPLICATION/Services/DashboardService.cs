@@ -20,6 +20,8 @@ namespace APPLICATION.Services
             var dashboardChart1 = await _dashboardRepository.GetDashboardChart1DataAsync(userId);
             var dashboardChart2 = await _dashboardRepository.GetDashboardChart2DataAsync(userId);
             var dashboardChart3 = await _dashboardRepository.GetDashboardChart3DataAsync(userId);
+            var dashboardChart4 = await _dashboardRepository.GetDashboardChart4DataAsync(userId);
+
 
             var Mappedchart1 = dashboardChart1.Select(c => new DashboardChart1DTO
             {
@@ -39,11 +41,53 @@ namespace APPLICATION.Services
                 Value = c.Value != null ? c.Value : 0 // Default to 0 if null
             }).ToList();
 
+            // Map the chart4 data
+            var rawRecords = dashboardChart4.Select(c => new DashboardChart4Record
+            {
+                Key = c.Key,
+                Name = c.Name,
+                Account = c.Account,
+                IntAmount = c.IntAmount,
+                Int_amount_char = c.Int_amount_char
+            }).ToList();
+
+            // Calculate account balances
+            var accountBalances = rawRecords
+                .GroupBy(r => r.Account)
+                .Select(g => new DashboardChart4AccountBalance
+                {
+                    Account_name = g.Key,
+                    Account_balance = g.Sum(x => x.IntAmount ?? 0)
+                }).ToList();
+
+            // Combine the records and account balances into a single array
+            var chart1 = new List<object>
+            {
+                Mappedchart1
+            };
+
+            var chart2 = new List<object>
+            {
+                Mappedchart2
+            };
+
+            var chart3 = new List<object>
+            {
+               Mappedchart3
+            };
+
+            var chart4 = new List<object>
+            {
+                rawRecords, // first element: list of records
+                accountBalances // second element: list of account balances
+            };
+
             return new DashboardResponse
             {
-                Chart1 = Mappedchart1,
-                Chart2 = Mappedchart2,
-                Chart3 = Mappedchart3
+                Chart1 = chart1,
+                Chart2 = chart2,
+                Chart3 = chart3,
+                Chart4 = chart4
 
             };
         }

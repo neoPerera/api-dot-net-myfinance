@@ -21,11 +21,27 @@ namespace APPLICATION.DTOs
         public string? Type;
         public float? Value;
     }
-    public class DashboardChart4DTO
-    {
-        public string? Key;
-        public string? Name;
-        public string? Account;
-        public float? Value;
-    }
+    //public class DashboardChart4DTO
+    //{
+    //    public string? Key;
+    //    public string? Name;
+    //    public string? Account;
+    //    public float? IntAmount;
+    //    public string Int_amount_char;
+    //}
+}
+
+public class DashboardChart4Record
+{
+    public string? Key { get; set; }
+    public string? Name { get; set; }
+    public string? Account { get; set; }
+    public float? IntAmount { get; set; }
+    public string Int_amount_char { get; set; }
+}
+
+public class DashboardChart4AccountBalance
+{
+    public string Account_name { get; set; }
+    public float Account_balance { get; set; }
 }

@@ -27,6 +27,7 @@ namespace CORE.Entities
         public string? Key;
         public string? Name;
         public string? Account;
-        public float? Value;
+        public float? IntAmount;
+        public string Int_amount_char;
     }
 }
