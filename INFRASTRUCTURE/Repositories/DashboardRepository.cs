@@ -120,9 +120,30 @@ namespace INFRASTRUCTURE.Repositories
             return result;
         }
 
-        public Task<List<DashboardChart4>> GetDashboardChart4DataAsync(string userId)
+        public async Task<List<DashboardChart4>> GetDashboardChart4DataAsync(string userId)
         {
-            throw new NotImplementedException();
+            var result = await _context.Transactions
+                .Where(t => t.User.Trim() == userId.Trim())
+                .Join(
+                    _context.Accounts.Where(a => a.Active == "Y"),
+                    t => t.Account,
+                    a => a.Id,
+                    (t, a) => new { Transaction = t, Account = a }
+                )
+                .OrderBy(x => x.Transaction.Date)
+                .Select(x => new DashboardChart4
+                {
+                    Key = x.Transaction.Id,
+                    Name = x.Transaction.Reason,
+                    Account = x.Account.Name,
+                    IntAmount = (float?)(x.Transaction.TrnType == "EXP" ? -x.Transaction.Amount : x.Transaction.Amount),
+                    Int_amount_char = (x.Transaction.TrnType == "EXP" ? -x.Transaction.Amount : x.Transaction.Amount)
+                        .GetValueOrDefault()
+                        .ToString("N2")
+                })
+                .ToListAsync();
+
+            return result;
         }
     }
 }
