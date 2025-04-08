@@ -39,6 +39,7 @@ namespace APPLICATION.Services
             var claims = new[]
             {
             new Claim(JwtRegisteredClaimNames.Sub, username), // Sub is a standard claim for the subject (user)
+            new Claim(ClaimTypes.Name, username),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Jti is a unique identifier for the token
         };
 
