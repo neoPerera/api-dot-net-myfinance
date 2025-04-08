@@ -16,9 +16,10 @@ namespace API.Controllers
         }
 
         [HttpGet("getForms")]
-        public async Task<IActionResult> GetActiveForms(string userId)
+        public async Task<IActionResult> GetActiveForms()
         {
-            var forms = await _formService.GetActiveFormsAsync(userId);
+            var username = User.Identity?.Name;
+            var forms = await _formService.GetActiveFormsAsync(username);
             return Ok(forms);
         }
 
