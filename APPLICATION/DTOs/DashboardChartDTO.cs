@@ -1,25 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace APPLICATION.DTOs
+﻿namespace APPLICATION.DTOs
 {
+    public class DashboardResponse
+    {
+
+        public List<object> Chart1 { get; set; }
+        public List<object> Chart2 { get; set; }
+        public List<object> Chart3 { get; set; }
+        public List<object> Chart4 { get; set; }
+
+
+    }
+
     public class DashboardChart1DTO
     {
-        public string? Type;
-        public float? Value;
+        public string? Type { get; set; }
+        public float? Value { get; set; }
     }
     public class DashboardChart2DTO
     {
-        public string? Source1;
-        public string? Target;
-        public float? Value;
-    }public class DashboardChart3DTO
+        public string? Source1 { get; set; }
+        public string? Target { get; set; }
+        public float? Value { get; set; }
+    }
+    public class DashboardChart3DTO
     {
-        public string? Type;
-        public float? Value;
+        public string? Type { get; set; }
+        public float? Value { get; set; }
     }
     //public class DashboardChart4DTO
     //{
