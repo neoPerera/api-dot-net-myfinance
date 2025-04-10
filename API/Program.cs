@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();        // Allow all headers
     });
 });
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

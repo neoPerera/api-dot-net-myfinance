@@ -125,7 +125,7 @@ namespace INFRASTRUCTURE.Repositories
             var result = await _context.Transactions
                 .Where(t => t.User.Trim() == userId.Trim())
                 .Join(
-                    _context.Accounts.Where(a => a.Active == "Y"),
+                    _context.Accounts.Where(a => a.Active == 'Y'),
                     t => t.Account,
                     a => a.Id,
                     (t, a) => new { Transaction = t, Account = a }
