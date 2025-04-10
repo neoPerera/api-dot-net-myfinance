@@ -21,10 +21,10 @@ namespace APPLICATION.Services
         {
             var user = _httpContextAccessor.HttpContext?.User.Identity;
             // Fetch the data from the repository (returning the list of entities)
-            var dashboardChart1 = await _dashboardRepository.GetDashboardChart1DataAsync(user?.Name ?? "test");
-            var dashboardChart2 = await _dashboardRepository.GetDashboardChart2DataAsync(user?.Name ?? "test");
-            var dashboardChart3 = await _dashboardRepository.GetDashboardChart3DataAsync(user?.Name ?? "test");
-            var dashboardChart4 = await _dashboardRepository.GetDashboardChart4DataAsync(user?.Name ?? "test");
+            var dashboardChart1 = await _dashboardRepository.GetDashboardChart1DataAsync(user?.Name ?? "ERROR");
+            var dashboardChart2 = await _dashboardRepository.GetDashboardChart2DataAsync(user?.Name ?? "ERROR");
+            var dashboardChart3 = await _dashboardRepository.GetDashboardChart3DataAsync(user?.Name ?? "ERROR");
+            var dashboardChart4 = await _dashboardRepository.GetDashboardChart4DataAsync(user?.Name ?? "ERROR");
 
 
             var Mappedchart1 = dashboardChart1.Select(c => new DashboardChart1DTO

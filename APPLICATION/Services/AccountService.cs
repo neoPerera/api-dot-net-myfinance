@@ -24,7 +24,7 @@ namespace APPLICATION.Services
             {
                 Id = request.StrId,
                 Name = request.StrName,
-                User = user?.Name ?? "test",
+                User = user?.Name ?? "ERROR",
                 Date = DateTime.Now,
                 Active = 'Y'
             };
