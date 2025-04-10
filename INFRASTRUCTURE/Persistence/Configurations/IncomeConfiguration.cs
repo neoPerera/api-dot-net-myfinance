@@ -32,6 +32,7 @@ namespace INFRASTRUCTURE.Persistence.Configurations
 
             builder.Property(i => i.Date)
                 .HasColumnName("dtm_date")
+                .HasColumnType("timestamp without time zone")
                 .IsRequired();
 
             // Unique constraint for str_name column

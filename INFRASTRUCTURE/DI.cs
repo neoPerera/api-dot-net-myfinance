@@ -15,11 +15,22 @@ namespace INFRASTRUCTURE
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<ILogin, LoginService>();
-            services.AddScoped<IFormService, FormService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            
+            services.AddScoped<IFormService, FormService>();
             services.AddScoped<IFormRepository, FormRepository>();
+
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IDashboardRepository, DashboardRepository>();
+
+            services.AddScoped<IIncomeService, IncomeService>();
+            services.AddScoped<IIncomeRepository, IncomeRepository>();
+
+            services.AddScoped<IExpenseService, ExpenseService>();
+            services.AddScoped<IExpenseRepository, ExpenseRepository>();
+
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
             return services;
         }
 

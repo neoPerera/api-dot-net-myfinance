@@ -20,10 +20,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDashboard()
         {
-            var username = User.Identity?.Name;
-            var result = await _dashboardService.GetDashboardDataAsync(username);
-
-            // Return the result wrapped in an OK response
+            var result = await _dashboardService.GetDashboardDataAsync();
             return Ok(result);
         }
     }

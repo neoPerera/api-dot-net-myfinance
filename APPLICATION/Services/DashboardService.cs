@@ -1,6 +1,7 @@
 ﻿using APPLICATION.DTOs;
 using APPLICATION.Interfaces;
 using CORE.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
 namespace APPLICATION.Services
@@ -8,19 +9,22 @@ namespace APPLICATION.Services
     public class DashboardService : IDashboardService
     {
         private readonly IDashboardRepository _dashboardRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DashboardService(IDashboardRepository dashboardRepository)
+        public DashboardService(IHttpContextAccessor httpContextAccessor,IDashboardRepository dashboardRepository)
         {
+            _httpContextAccessor = httpContextAccessor;
             _dashboardRepository = dashboardRepository;
         }
 
-        public async Task<DashboardResponse> GetDashboardDataAsync(string userId)
+        public async Task<DashboardResponse> GetDashboardDataAsync()
         {
+            var user = _httpContextAccessor.HttpContext?.User.Identity;
             // Fetch the data from the repository (returning the list of entities)
-            var dashboardChart1 = await _dashboardRepository.GetDashboardChart1DataAsync(userId);
-            var dashboardChart2 = await _dashboardRepository.GetDashboardChart2DataAsync(userId);
-            var dashboardChart3 = await _dashboardRepository.GetDashboardChart3DataAsync(userId);
-            var dashboardChart4 = await _dashboardRepository.GetDashboardChart4DataAsync(userId);
+            var dashboardChart1 = await _dashboardRepository.GetDashboardChart1DataAsync(user?.Name ?? "test");
+            var dashboardChart2 = await _dashboardRepository.GetDashboardChart2DataAsync(user?.Name ?? "test");
+            var dashboardChart3 = await _dashboardRepository.GetDashboardChart3DataAsync(user?.Name ?? "test");
+            var dashboardChart4 = await _dashboardRepository.GetDashboardChart4DataAsync(user?.Name ?? "test");
 
 
             var Mappedchart1 = dashboardChart1.Select(c => new DashboardChart1DTO
