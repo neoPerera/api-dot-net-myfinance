@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250404081015_AddStrUsersTable2")]
-    partial class AddStrUsersTable2
+    [Migration("20250411181514_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,10 +32,9 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("str_id");
 
-                    b.Property<string>("Active")
-                        .IsRequired()
+                    b.Property<char>("Active")
                         .HasMaxLength(1)
-                        .HasColumnType("character varying(1)")
+                        .HasColumnType("character(1)")
                         .HasColumnName("str_active");
 
                     b.Property<DateTime>("Date")
@@ -76,14 +75,13 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("str_id");
 
-                    b.Property<string>("Active")
-                        .IsRequired()
+                    b.Property<char>("Active")
                         .HasMaxLength(1)
-                        .HasColumnType("character varying(1)")
+                        .HasColumnType("character(1)")
                         .HasColumnName("str_active");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("dtm_date");
 
                     b.Property<string>("Name")
@@ -158,7 +156,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnName("str_active");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("dtm_date");
 
                     b.Property<string>("Name")
@@ -187,7 +185,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("str_account");
 
-                    b.Property<decimal?>("Amount")
+                    b.Property<float?>("Amount")
                         .HasColumnType("numeric")
                         .HasColumnName("int_amount");
 

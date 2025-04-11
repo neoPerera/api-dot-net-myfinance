@@ -29,10 +29,9 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("str_id");
 
-                    b.Property<string>("Active")
-                        .IsRequired()
+                    b.Property<char>("Active")
                         .HasMaxLength(1)
-                        .HasColumnType("character varying(1)")
+                        .HasColumnType("character(1)")
                         .HasColumnName("str_active");
 
                     b.Property<DateTime>("Date")
@@ -73,14 +72,13 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("str_id");
 
-                    b.Property<string>("Active")
-                        .IsRequired()
+                    b.Property<char>("Active")
                         .HasMaxLength(1)
-                        .HasColumnType("character varying(1)")
+                        .HasColumnType("character(1)")
                         .HasColumnName("str_active");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("dtm_date");
 
                     b.Property<string>("Name")
@@ -155,7 +153,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnName("str_active");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("dtm_date");
 
                     b.Property<string>("Name")
@@ -184,7 +182,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("character varying(20)")
                         .HasColumnName("str_account");
 
-                    b.Property<decimal?>("Amount")
+                    b.Property<float?>("Amount")
                         .HasColumnType("numeric")
                         .HasColumnName("int_amount");
 
