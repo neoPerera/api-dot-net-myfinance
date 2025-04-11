@@ -2,8 +2,8 @@ name: CI - Build and Push Docker Image
 
 on:
   push:
-    branches: [ '*' ]  # Trigger on any branch push
-  workflow_dispatch:  # Allows manual triggering
+    branches: [ '*' ]
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -22,23 +22,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 📦 Build Docker image
+      - name: 🏷️ Set image tag
         run: |
-          # Extract branch name from github.ref
-          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
-          echo "Branch name is $BRANCH_NAME"
-          
-          # Check if the branch is master, tag as latest, otherwise use branch name
-          if [ "$BRANCH_NAME" == "master" ]; then
+          BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}" | tr '/' '-')
+          if [ "$BRANCH_NAME" = "master" ]; then
             IMAGE_TAG="latest"
           else
             IMAGE_TAG="$BRANCH_NAME"
           fi
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-          # Build Docker image with the appropriate tag
-          docker build -f API/Dockerfile -t chanuth/api-dot-net-myfinance:$IMAGE_TAG .
+      - name: 📦 Build Docker image
+        run: |
+          docker build -f API/Dockerfile -t chanuth/api-dot-net-myfinance:${IMAGE_TAG} .
 
       - name: 📤 Push Docker image
         run: |
-          # Push the image with the determined tag
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/api-dot-net-myfinance:$IMAGE_TAG
+          docker push chanuth/api-dot-net-myfinance:${IMAGE_TAG}
