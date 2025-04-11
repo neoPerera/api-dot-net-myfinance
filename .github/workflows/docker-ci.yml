@@ -24,7 +24,7 @@ jobs:
 
       - name: 📦 Build Docker image
         run: |
-          docker build -t chanuth/api-dot-net-myfinance:latest .
+          docker build -f API/Dockerfile -t chanuth/api-dot-net-myfinance:latest .
 
       - name: 📤 Push Docker image
         run: |
