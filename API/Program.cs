@@ -47,7 +47,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey"])),5057
     };
 });
 
@@ -63,7 +63,7 @@ if (app.Environment.IsDevelopment())
 // Apply CORS policy globally (before Authorization)
 app.UseCors("AllowAllOrigins");
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();  // Add Authentication middleware
 app.UseAuthorization();   // Add Authorization middleware

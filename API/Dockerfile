@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["API/API.csproj", "API/"]
+COPY ["APPLICATION/APPLICATION.csproj", "APPLICATION/"]
+COPY ["CORE/CORE.csproj", "CORE/"]
+COPY ["INFRASTRUCTURE/INFRASTRUCTURE.csproj", "INFRASTRUCTURE/"]
 RUN dotnet restore "./API/API.csproj"
 COPY . .
 WORKDIR "/src/API"
