@@ -23,9 +23,11 @@ namespace APPLICATION.DTOs
         public string StrId { get; set; }
         public string StrName { get; set; }
         public string StrAccount { get; set; }
+        public string StrAccount2 { get; set; }
         public string StrTransCat { get; set; }
         public string StrTransType { get; set; }
         public float FloatAmount { get; set; }
+        public bool IsDoubleEntry { get; set; }
     }
 
 }

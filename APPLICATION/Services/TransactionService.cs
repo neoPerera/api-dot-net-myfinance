@@ -71,27 +71,60 @@ namespace APPLICATION.Services
 
         public async Task<AddRefResponse> AddTransaction(AddTransactionRequest request)
         {
-            try
             {
-
-                var user = _httpContextAccessor.HttpContext?.User.Identity;
-                // Map AddTransactionRequest to Transaction entity
-                var Entity = new Transaction
+                try
                 {
-                    Id = request.StrId,
-                    TrnType = request.StrTransType,
-                    TrnCat = request.StrTransCat,
-                    Amount = request.FloatAmount,
-                    Date = DateTime.Now,  // Assuming current time for Date
-                    Reason = request.StrName, // Assuming "Name" as reason for now
-                    User = user?.Name ?? "ERROR", // Assuming "Account" as user for now
-                    Account = request.StrAccount // Account is set as Account
-                };
-                await _transactionRepository.AddTransaction(Entity);
-                return new ResponseService<AddRefResponse>().Response;
-            }catch(Exception e)
-            {
-                return new ResponseService<AddRefResponse>(e).Response;
+                    var user = _httpContextAccessor.HttpContext?.User.Identity;
+                    var username = user?.Name ?? "ERROR";
+
+                    // Create the primary transaction
+                    var transaction = new Transaction
+                    {
+                        Id = request.StrId,
+                        TrnType = request.StrTransType,
+                        TrnCat = request.StrTransCat,
+                        Amount = request.FloatAmount,
+                        Date = DateTime.Now,
+                        Reason = request.StrName,
+                        User = username,
+                        Account = request.StrAccount
+                    };
+
+                    // Handle double-entry logic
+                    if (request.IsDoubleEntry)
+                    {
+                        if (request.StrAccount == request.StrAccount2)
+                            throw new Exception("Source and destination accounts cannot be the same.");
+
+                        var oppositeType = request.StrTransType == "INC" ? "EXP" : "INC";
+                        var mirrorId = await _transactionRepository.GetTransactionSequence();
+
+                        var mirrorTransaction = new Transaction
+                        {
+                            Id = mirrorId,
+                            TrnType = oppositeType,
+                            TrnCat = request.StrTransCat,
+                            Amount = request.FloatAmount,
+                            Date = DateTime.Now,
+                            Reason = $"DOUBLE ENTRY FOR => {request.StrId}",
+                            User = username,
+                            Account = request.StrAccount2
+                        };
+
+                        await _transactionRepository.AddTransaction(transaction);
+                        await _transactionRepository.AddTransaction(mirrorTransaction);
+                    }
+                    else
+                    {
+                        await _transactionRepository.AddTransaction(transaction);
+                    }
+
+                    return new ResponseService<AddRefResponse>().Response;
+                }
+                catch (Exception ex)
+                {
+                    return new ResponseService<AddRefResponse>(ex).Response;
+                }
             }
 
         }
