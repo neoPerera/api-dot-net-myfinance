@@ -14,26 +14,23 @@ namespace INFRASTRUCTURE
         // Register Application Services
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<ICommonRepository, CommonRepository>();
+
             services.AddScoped<ILogin, LoginService>();
-            services.AddScoped<IUserRepository, UserRepository>();
             
             services.AddScoped<IFormService, FormService>();
-            services.AddScoped<IFormRepository, FormRepository>();
 
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IDashboardRepository, DashboardRepository>();
 
             services.AddScoped<IIncomeService, IncomeService>();
-            services.AddScoped<IIncomeRepository, IncomeRepository>();
 
             services.AddScoped<IExpenseService, ExpenseService>();
-            services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
 
             services.AddScoped<ITransactionService, TransactionService>();
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
+
             return services;
         }
 

@@ -5,14 +5,9 @@ using CORE.Interfaces;
 
 namespace APPLICATION.Services
 {
-    public class ExpenseService : IExpenseService
+    public class ExpenseService(ICommonRepository _commonRepository) : IExpenseService
     {
-        private readonly IExpenseRepository _expenseRepository;
-        public ExpenseService(IExpenseRepository expenseRepository)
-        {
-            _expenseRepository = expenseRepository;
-        }
-
+ 
         public async Task<AddRefResponse> AddExpenseAsync(AddRefRequest request)
         {
             var Entity = new Expense
@@ -24,7 +19,7 @@ namespace APPLICATION.Services
             };
             try
             {
-                await _expenseRepository.AddExpenseAsync(Entity);
+                await _commonRepository.SaveAsync<Expense>(Entity);
                 return new ResponseService<AddRefResponse>().Response;
             }
             catch (Exception e)
@@ -35,7 +30,7 @@ namespace APPLICATION.Services
 
         public async Task<List<GetRefListResponse>> GetExpenseListAsync()
         {
-            var expenses = await _expenseRepository.GetExpenseListAsync("userId");
+            var expenses = await _commonRepository.GetListAsync<Expense>();
 
             var mappedExpenses = expenses.Select(x => new GetRefListResponse
             {
@@ -50,7 +45,7 @@ namespace APPLICATION.Services
 
         public async Task<GetRefSequenceResponse> GetExpenseSequenceAsync()
         {
-            var sequence = await _expenseRepository.GetExpenseSequenceAsync();
+            var sequence = await _commonRepository.GetSequenceAsync("expense_sequence", 3);
             string currentDate = DateTime.Now.ToString("yyyyMMdd");
             var response = new GetRefSequenceResponse
             {

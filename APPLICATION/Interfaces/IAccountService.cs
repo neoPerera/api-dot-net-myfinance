@@ -1,5 +1,4 @@
 ﻿using APPLICATION.DTOs;
-using APPLICATION.DTOs;
 namespace APPLICATION.Interfaces
 {
     public interface IAccountService

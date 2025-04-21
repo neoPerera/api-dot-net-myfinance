@@ -1,24 +1,18 @@
 ﻿using APPLICATION.DTOs;
 using APPLICATION.Interfaces;
 using CORE.Entities;
+using CORE.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace APPLICATION.Services
 {
-    public class FormService : IFormService
+    public class FormService(ICommonRepository _commonRepository) : IFormService
     {
-        private readonly IFormRepository _formRepository;
-
-        public FormService(IFormRepository formRepository)
-        {
-            _formRepository = formRepository;
-        }
-
         public async Task<List<FormResponse>> GetActiveFormsAsync(string userId)
         {
-            var forms =  await _formRepository.GetActiveFormsAsync();
+            var forms =  await _commonRepository.GetListAsync<Form>(filter: f => f.Active == 'Y');
             var mappedforms = forms.Select(form => new FormResponse
             {
                 str_form_id = form.FormId,

@@ -11,24 +11,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace APPLICATION.Services
 {
-    public class TransactionService : ITransactionService
+    public class TransactionService(IHttpContextAccessor _httpContextAccessor, ICommonRepository _commonRepository) : ITransactionService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ITransactionRepository _transactionRepository;
-        private readonly IAccountRepository _accountRepository;
-
-
-        public TransactionService(IHttpContextAccessor httpContextAccessor,ITransactionRepository transactionRepository, IAccountRepository accountRepository)
-        {
-            _httpContextAccessor = httpContextAccessor;
-            _transactionRepository = transactionRepository;
-            _accountRepository = accountRepository;
-        }
-
         public async Task<GetTransactionSequenceResponse> GetExpenseSequenceAsync()
         {
-            var sequence = await _transactionRepository.GetTransactionSequence();
-            var accounts = await _accountRepository.GetAccountListAsync("userId");
+            var user = _httpContextAccessor.HttpContext?.User.Identity;
+            var sequence = await _commonRepository.GetSequenceAsync("transaction_sequence",4);
+            var username = user?.Name ?? "ERROR";
+            var accounts = await _commonRepository.GetListAsync<Account>(filter: a => a.Active == 'Y' && a.User == username);
             var MappedAccounts = accounts.Select(c => new GetTransactionSequenceTypes
             {
                 Value = c.Id ?? "No Id",    // Handle null if any
@@ -97,7 +87,7 @@ namespace APPLICATION.Services
                             throw new Exception("Source and destination accounts cannot be the same.");
 
                         var oppositeType = request.StrTransType == "INC" ? "EXP" : "INC";
-                        var mirrorId = await _transactionRepository.GetTransactionSequence();
+                        var mirrorId = await _commonRepository.GetSequenceAsync("transaction_sequence", 4);
 
                         var mirrorTransaction = new Transaction
                         {
@@ -111,12 +101,12 @@ namespace APPLICATION.Services
                             Account = request.StrAccount2
                         };
 
-                        await _transactionRepository.AddTransaction(transaction);
-                        await _transactionRepository.AddTransaction(mirrorTransaction);
+                        await _commonRepository.SaveAsync<Transaction>(transaction);
+                        await _commonRepository.SaveAsync<Transaction>(mirrorTransaction);
                     }
                     else
                     {
-                        await _transactionRepository.AddTransaction(transaction);
+                        await _commonRepository.SaveAsync<Transaction>(transaction);
                     }
 
                     return new ResponseService<AddRefResponse>().Response;

@@ -5,31 +5,22 @@ using CORE.Interfaces;
 
 namespace APPLICATION.Services
 {
-    public class IncomeService : IIncomeService
+    public class IncomeService(ICommonRepository _commonRepository) : IIncomeService
     {
-        private readonly IIncomeRepository _incomeRepository;
-        public IncomeService(IIncomeRepository incomeRepository)
-        {
-            _incomeRepository = incomeRepository;
-        }
         public async Task<List<GetRefListResponse>> GetIncomeListAsync()
         {
-            var incomes = await _incomeRepository.GetIncomeListAsync("userId");
-
+            var incomes = await _commonRepository.GetListAsync<Income>(filter: x => x.Active == '1');
             var mappedIncomes = incomes.Select(x => new GetRefListResponse
             {
                 Key = x.Id,
                 Str_name = x.Name,
                 Dtm_date = x.Date.ToString("yyyy-MM-dd")
-
-            })
-            .ToList();
+            }).ToList();
             return mappedIncomes;
-
         }
         public async Task<GetRefSequenceResponse> GetIncomeSequenceAsync()
         {
-            var sequence = await _incomeRepository.GetIncomeSequenceAsync();
+            var sequence = await _commonRepository.GetSequenceAsync("income_sequence",3);
             string currentDate = DateTime.Now.ToString("yyyyMMdd");
             var response = new GetRefSequenceResponse
             {
@@ -40,7 +31,6 @@ namespace APPLICATION.Services
         }
         public async Task<AddRefResponse> AddIncomeAsync(AddRefRequest request)
         { 
-            // Add the income entity to the context
             var Entity = new Income
             {
                 Id = request.StrId,
@@ -50,7 +40,7 @@ namespace APPLICATION.Services
             };
             try
             {
-                await _incomeRepository.AddIncomeAsync(Entity);
+                await _commonRepository.SaveAsync<Income>(Entity);
                 return new ResponseService<AddRefResponse>().Response;
             }
             catch (Exception e)
