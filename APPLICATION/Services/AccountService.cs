@@ -7,15 +7,8 @@ using Npgsql;
 
 namespace APPLICATION.Services
 {
-    public class AccountService : IAccountService
+    public class AccountService(IHttpContextAccessor _httpContextAccessor, ICommonRepository _commonRepository) : IAccountService
     {
-        private readonly IAccountRepository _accountRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public AccountService(IHttpContextAccessor httpContextAccessor,IAccountRepository accountRepository)
-        {
-            _httpContextAccessor = httpContextAccessor;
-            _accountRepository = accountRepository;
-        }
         public async Task<AddRefResponse> AddAccountAsync(AddRefRequest request)
         {
             var user = _httpContextAccessor.HttpContext?.User.Identity;
@@ -30,7 +23,7 @@ namespace APPLICATION.Services
             };
             try
             {
-                await _accountRepository.AddAccountAsync(Entity);
+                await _commonRepository.SaveAsync<Account>(Entity);
                 return new ResponseService<AddRefResponse>().Response;
             }
             catch (Exception e)
@@ -41,7 +34,9 @@ namespace APPLICATION.Services
 
         public async Task<List<GetRefListResponse>> GetAccountListAsync()
         {
-            var accounts = await _accountRepository.GetAccountListAsync("userId");
+            var user = _httpContextAccessor.HttpContext?.User.Identity ;
+            var username = user?.Name ?? "ERROR";
+            var accounts = await _commonRepository.GetListAsync<Account>(filter: a => a.Active == 'Y' && a.User == username );
             var mappedAccounts = accounts.Select(x => new GetRefListResponse
             {
                 Key = x.Id,
@@ -54,7 +49,7 @@ namespace APPLICATION.Services
 
         public async Task<GetRefSequenceResponse> GetAccountSequenceAsync()
         {
-            var sequence = await _accountRepository.GetAccountSequenceAsync();
+            var sequence = await _commonRepository.GetSequenceAsync("accounts_sequence", 3);
             string currentDate = DateTime.Now.ToString("yyyyMMdd");
             var response = new GetRefSequenceResponse
             {
