@@ -12,16 +12,12 @@ namespace APPLICATION.DTOs
         public string Str_name { get; set; }
         public string Dtm_date { get; set; }
     }
-    public class GetRefSequenceResponse
-    {
-        public string Output_value { get; set; }
-    }
     public class AddRefRequest
     {
         public string StrId { get; set; }
         public string StrName { get; set; }
     }
-    public class AddRefResponse
+    public class RefResponse
     {
         public int StatusCode { get; set; }
         public object Data { get; set; }

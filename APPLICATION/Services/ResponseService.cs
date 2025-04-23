@@ -2,36 +2,49 @@
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace APPLICATION.Services
 {
     public class ResponseService<T>
     {
-        public T Response { get; private set; }
+        public T Response { get; private set; } = default!; // Initialize with default value to satisfy non-nullable property
 
         public ResponseService()
         {
-            if (typeof(T) == typeof(AddRefResponse))
+            if (typeof(T) == typeof(RefResponse))
             {
-                var response = new AddRefResponse
+                var response = new RefResponse
                 {
                     StatusCode = 200,
                     Data = new { isValid = true }
                 };
+                Response = (T)(object)response;
+            }
+        }
 
+        public ResponseService(object data)
+        {
+            if (typeof(T) == typeof(RefResponse))
+            {
+                var response = new RefResponse
+                {
+                    StatusCode = 200,
+                    Data = data
+                };
                 Response = (T)(object)response;
             }
         }
 
         public ResponseService(Exception ex)
         {
-            if (typeof(T) == typeof(AddRefResponse))
+            if (typeof(T) == typeof(RefResponse))
             {
                 var detail = ex.InnerException is PostgresException pgEx
                     ? pgEx.MessageText
                     : ex.Message ?? "ERROR";
 
-                var response = new AddRefResponse
+                var response = new RefResponse
                 {
                     StatusCode = 400,
                     Data = new { isValid = false, error = new RefError { Detail = detail } }

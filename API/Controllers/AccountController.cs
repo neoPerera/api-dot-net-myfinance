@@ -24,7 +24,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetSequenceAsync()
         {
             var result = await _iAccountService.GetAccountSequenceAsync();
-            return Ok(result);
+            return StatusCode(result.StatusCode, result.Data);
         }
         [HttpPost("add")]
         public async Task<IActionResult> AddAccount([FromBody] AddRefRequest request)

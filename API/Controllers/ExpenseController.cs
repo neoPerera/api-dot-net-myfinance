@@ -24,7 +24,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetSequenceAsync()
         {
             var result = await _expenseService.GetExpenseSequenceAsync();
-            return Ok(result);
+            return StatusCode(result.StatusCode, result.Data);
         }
         [HttpPost("add")]
         public async Task<IActionResult> AddExpense([FromBody] AddRefRequest request)

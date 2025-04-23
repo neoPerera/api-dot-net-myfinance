@@ -4,8 +4,8 @@ namespace APPLICATION.Interfaces
 {
     public interface IIncomeService
     {
-        Task<List<GetRefListResponse>> GetIncomeListAsync();
-        Task<GetRefSequenceResponse> GetIncomeSequenceAsync();
-        Task<AddRefResponse> AddIncomeAsync(AddRefRequest request);
+        Task<RefResponse> GetIncomeListAsync();
+        Task<RefResponse> GetIncomeSequenceAsync();
+        Task<RefResponse> AddIncomeAsync(AddRefRequest request);
     }
 }

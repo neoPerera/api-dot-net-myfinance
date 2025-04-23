@@ -59,7 +59,7 @@ namespace APPLICATION.Services
             return response;
         }
 
-        public async Task<AddRefResponse> AddTransaction(AddTransactionRequest request)
+        public async Task<RefResponse> AddTransaction(AddTransactionRequest request)
         {
             {
                 try
@@ -109,11 +109,11 @@ namespace APPLICATION.Services
                         await _commonRepository.SaveAsync<Transaction>(transaction);
                     }
 
-                    return new ResponseService<AddRefResponse>().Response;
+                    return new ResponseService<RefResponse>().Response;
                 }
                 catch (Exception ex)
                 {
-                    return new ResponseService<AddRefResponse>(ex).Response;
+                    return new ResponseService<RefResponse>(ex).Response;
                 }
             }
 

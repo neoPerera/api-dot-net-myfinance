@@ -18,19 +18,18 @@ namespace API.Controllers
         public async Task<IActionResult> GetIncomeAsync()
         {
             var result = await _incomeService.GetIncomeListAsync();
-            return Ok(result);
+            return StatusCode(result.StatusCode, result.Data);
         }
         [HttpGet("getSequence")]
         public async Task<IActionResult> GetSequenceAsync()
         {
             var result = await _incomeService.GetIncomeSequenceAsync();
-            return Ok(result);
+            return StatusCode(result.StatusCode, result.Data);
         }
         [HttpPost("add")]
         public async Task<IActionResult> AddIncome([FromBody] AddRefRequest request)
         {
             var result = await _incomeService.AddIncomeAsync(request);
-
             return StatusCode(result.StatusCode, result.Data);
         }
     }

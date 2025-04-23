@@ -9,7 +9,7 @@ namespace APPLICATION.Services
 {
     public class AccountService(IHttpContextAccessor _httpContextAccessor, ICommonRepository _commonRepository) : IAccountService
     {
-        public async Task<AddRefResponse> AddAccountAsync(AddRefRequest request)
+        public async Task<RefResponse> AddAccountAsync(AddRefRequest request)
         {
             var user = _httpContextAccessor.HttpContext?.User.Identity;
 
@@ -24,11 +24,11 @@ namespace APPLICATION.Services
             try
             {
                 await _commonRepository.SaveAsync<Account>(Entity);
-                return new ResponseService<AddRefResponse>().Response;
+                return new ResponseService<RefResponse>().Response;
             }
             catch (Exception e)
             {
-                return new ResponseService<AddRefResponse>(e).Response;
+                return new ResponseService<RefResponse>(e).Response;
             }
         }
 
@@ -47,15 +47,12 @@ namespace APPLICATION.Services
             return mappedAccounts;
         }
 
-        public async Task<GetRefSequenceResponse> GetAccountSequenceAsync()
+        public async Task<RefResponse> GetAccountSequenceAsync()
         {
             var sequence = await _commonRepository.GetSequenceAsync("accounts_sequence", 3);
             string currentDate = DateTime.Now.ToString("yyyyMMdd");
-            var response = new GetRefSequenceResponse
-            {
-                Output_value = $"ACC{currentDate}{sequence}"
-            };
-            return response;
+            var response = new { Output_value = $"ACC{currentDate}{sequence}" };
+            return new ResponseService<RefResponse>(response).Response;
         }
     }
 }
