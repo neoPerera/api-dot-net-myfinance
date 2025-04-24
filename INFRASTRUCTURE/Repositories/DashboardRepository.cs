@@ -130,7 +130,7 @@ namespace INFRASTRUCTURE.Repositories
                     a => a.Id,
                     (t, a) => new { Transaction = t, Account = a }
                 )
-                .OrderBy(x => x.Transaction.Date)
+                .OrderByDescending(x => x.Transaction.Date)
                 .Select(x => new DashboardChart4
                 {
                     Key = x.Transaction.Id,

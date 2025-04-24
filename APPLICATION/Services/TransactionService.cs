@@ -88,10 +88,11 @@ namespace APPLICATION.Services
 
                         var oppositeType = request.StrTransType == "INC" ? "EXP" : "INC";
                         var mirrorId = await _commonRepository.GetSequenceAsync("transaction_sequence", 4);
+                        string currentDate = DateTime.Now.ToString("yyyyMMdd");
 
                         var mirrorTransaction = new Transaction
                         {
-                            Id = mirrorId,
+                            Id = $"TRN{currentDate}{mirrorId}",
                             TrnType = oppositeType,
                             TrnCat = request.StrTransCat,
                             Amount = request.FloatAmount,
