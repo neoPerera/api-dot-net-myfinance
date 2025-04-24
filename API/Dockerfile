@@ -2,6 +2,13 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+# 👇 Timezone Setup
+ENV TZ=Asia/Colombo
+RUN apt-get update && \
+    apt-get install -y tzdata && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+    
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
