@@ -47,7 +47,7 @@ namespace APPLICATION.Services
         {
             var sequence = await _commonRepository.GetSequenceAsync("expense_sequence", 3);
             string currentDate = DateTime.Now.ToString("yyyyMMdd");
-            var response = new { Output_value = $"EXP{currentDate}{sequence}" };
+            var response = new { Output_value = $"EXM{currentDate}{sequence}" };
             return new ResponseService<RefResponse>(response).Response;
         }
     }
