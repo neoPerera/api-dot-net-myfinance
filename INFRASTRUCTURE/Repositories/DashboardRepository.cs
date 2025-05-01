@@ -17,7 +17,7 @@ namespace INFRASTRUCTURE.Repositories
         {
             // Fetch data and return as DTOs
             var result = await _context.Transactions
-                .Where(a => a.User.Trim() == userId)
+                .Where(a => a.User.Trim() == userId && a.TrnType == "EXP")
                 .Join(
                     _context.Expenses,
                     a => a.TrnCat,
