@@ -5,9 +5,6 @@ on:
     workflows: ["CI - Build and Push Docker Image"]  # Name of your CI workflow
     types:
       - completed
-    # The condition below ensures the deployment only happens if the CI workflow was successful
-    branches:
-      - master
 
 jobs:
   deploy:
