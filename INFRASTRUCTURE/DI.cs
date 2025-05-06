@@ -31,6 +31,8 @@ namespace INFRASTRUCTURE
 
             services.AddScoped<ITransactionService, TransactionService>();
 
+            services.AddScoped<EmailService>();
+
             return services;
         }
 

@@ -1,3 +1,4 @@
+using APPLICATION.DTOs;
 using INFRASTRUCTURE;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +19,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 // Register services for DI

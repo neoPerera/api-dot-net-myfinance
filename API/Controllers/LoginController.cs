@@ -1,22 +1,17 @@
 ﻿using APPLICATION.DTOs;
 using APPLICATION.Interfaces;
+using APPLICATION.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    public class LoginController : ControllerBase
+    public class LoginController(ILogin _loginService, EmailService _emailService) : ControllerBase
     {
-        private readonly ILogin _loginService;
-
-        public LoginController(ILogin loginService)
-        {
-            _loginService = loginService;
-        }
-
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
+            await _emailService.SendEmailAsync();
             var result = await _loginService.AuthenticateAsync(loginRequest.Username, loginRequest.Password);
             if (result.Success)
             {
