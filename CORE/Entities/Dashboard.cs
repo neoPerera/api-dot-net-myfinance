@@ -30,4 +30,10 @@ namespace CORE.Entities
         public float? IntAmount;
         public string Int_amount_char;
     }
+
+    public class DashboardExpenses
+    {
+        public string? Type;
+        public float? Value;
+    }
 }

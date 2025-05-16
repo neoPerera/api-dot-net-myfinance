@@ -8,7 +8,7 @@ namespace CORE.Interfaces
         Task<List<DashboardChart2>> GetDashboardChart2DataAsync(string userId);
         Task<List<DashboardChart3>> GetDashboardChart3DataAsync(string userId);
         Task<List<DashboardChart4>> GetDashboardChart4DataAsync(string userId);
-
+        Task<List<DashboardExpenses>> GetDashboardExpensesAsync(string userId);
 
 
 
