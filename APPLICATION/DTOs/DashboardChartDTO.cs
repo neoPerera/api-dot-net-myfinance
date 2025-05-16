@@ -7,6 +7,7 @@
         public List<object> Chart2 { get; set; }
         public List<object> Chart3 { get; set; }
         public List<object> Chart4 { get; set; }
+        public List<object> ChartExpenses { get; set; }
 
 
     }
@@ -23,6 +24,12 @@
         public float? Value { get; set; }
     }
     public class DashboardChart3DTO
+    {
+        public string? Type { get; set; }
+        public float? Value { get; set; }
+    }
+
+    public class DashboardExpenses
     {
         public string? Type { get; set; }
         public float? Value { get; set; }

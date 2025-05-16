@@ -25,7 +25,7 @@ namespace APPLICATION.Services
             var dashboardChart2 = await _dashboardRepository.GetDashboardChart2DataAsync(user?.Name ?? "ERROR");
             var dashboardChart3 = await _dashboardRepository.GetDashboardChart3DataAsync(user?.Name ?? "ERROR");
             var dashboardChart4 = await _dashboardRepository.GetDashboardChart4DataAsync(user?.Name ?? "ERROR");
-
+            var dashboardExpenses = await _dashboardRepository.GetDashboardExpensesAsync(user?.Name ?? "ERROR");
 
             var Mappedchart1 = dashboardChart1.Select(c => new DashboardChart1DTO
             {
@@ -40,6 +40,12 @@ namespace APPLICATION.Services
                 Value = c.Value != null ? c.Value : 0 // Default to 0 if null
             }).ToList();
             var Mappedchart3 = dashboardChart3.Select(c => new DashboardChart3DTO
+            {
+                Type = c.Type ?? "No Type",    // Handle null if any
+                Value = c.Value != null ? c.Value : 0 // Default to 0 if null
+            }).ToList();
+
+            var MappedExpenses = dashboardExpenses.Select(c => new DashboardExpenses 
             {
                 Type = c.Type ?? "No Type",    // Handle null if any
                 Value = c.Value != null ? c.Value : 0 // Default to 0 if null
@@ -86,12 +92,18 @@ namespace APPLICATION.Services
                 accountBalances // second element: list of account balances
             };
 
+            var ChartExpenses = new List<object>
+            {
+                MappedExpenses
+            };
+
             return new DashboardResponse
             {
                 Chart1 = chart1,
                 Chart2 = chart2,
                 Chart3 = chart3,
-                Chart4 = chart4
+                Chart4 = chart4,
+                ChartExpenses = ChartExpenses
 
             };
         }

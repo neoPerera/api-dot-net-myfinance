@@ -1,5 +1,4 @@
-﻿using APPLICATION.DTOs;
-using CORE.Entities;
+﻿using CORE.Entities;
 using CORE.Interfaces;
 using INFRASTRUCTURE.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -142,6 +141,28 @@ namespace INFRASTRUCTURE.Repositories
                         .ToString("N2")
                 })
                 .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<List<DashboardExpenses>> GetDashboardExpensesAsync(string userId)
+        {
+            var result = await _context.Transactions
+                .Where(t => t.User.Trim() == userId.Trim() && t.TrnType == "EXP")
+                .Join(
+                    _context.Accounts.Where(a => a.Active == 'Y'),
+                    t => t.Account,
+                    a => a.Id,
+                    (t, a) => new { Transaction = t, Account = a }
+                )
+                .GroupBy(r=> r.Account)
+                .Select(g => new DashboardExpenses
+                {
+                    Type = g.Key.Name,                   // Account name
+                    Value = g.Sum(x => x.Transaction.Amount) // Total amount
+                })
+                .ToListAsync();
+
 
             return result;
         }
