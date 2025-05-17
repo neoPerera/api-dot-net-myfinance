@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CORE.Entities
+﻿namespace CORE.Entities
 {
-    public class DashboardChart1
+    public class DashboardTypeValue
     {
         public string? Type;
         public float? Value;
@@ -17,11 +11,7 @@ namespace CORE.Entities
         public string? Target;
         public float? Value;
     }
-    public class DashboardChart3
-    {
-        public string? Type;
-        public float? Value;
-    }
+
     public class DashboardChart4
     {
         public string? Key;
@@ -29,11 +19,5 @@ namespace CORE.Entities
         public string? Account;
         public float? IntAmount;
         public string Int_amount_char;
-    }
-
-    public class DashboardExpenses
-    {
-        public string? Type;
-        public float? Value;
     }
 }

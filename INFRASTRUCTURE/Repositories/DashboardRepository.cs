@@ -12,7 +12,7 @@ namespace INFRASTRUCTURE.Repositories
         {
             _context = context;
         }
-        public async Task<List<DashboardChart1>> GetDashboardChart1DataAsync(string userId)
+        public async Task<List<DashboardTypeValue>> GetDashboardChart1DataAsync(string userId)
         {
             // Fetch data and return as DTOs
             var result = await _context.Transactions
@@ -24,7 +24,7 @@ namespace INFRASTRUCTURE.Repositories
                     (a, b) => new { Transaction = a, Expense = b }
                 )
                 .GroupBy(x => x.Expense.Name)
-                .Select(g => new DashboardChart1
+                .Select(g => new DashboardTypeValue
                 {
                     Type = g.Key,
                     Value = (float?)g.Sum(x => x.Transaction.Amount)
@@ -94,7 +94,7 @@ namespace INFRASTRUCTURE.Repositories
 
 
 
-        public async Task<List<DashboardChart3>> GetDashboardChart3DataAsync(string userId)
+        public async Task<List<DashboardTypeValue>> GetDashboardChart3DataAsync(string userId)
         {
             var result = await _context.Transactions
                 .Where(a =>
@@ -108,7 +108,7 @@ namespace INFRASTRUCTURE.Repositories
                     (a, b) => new { Transaction = a, Account = b }
                 )
                 .GroupBy(x => x.Transaction.TrnType)
-                .Select(g => new DashboardChart3
+                .Select(g => new DashboardTypeValue
                 {
                     Type = g.Key,
                     Value = (float?)g.Sum(x => x.Transaction.Amount)
@@ -145,7 +145,7 @@ namespace INFRASTRUCTURE.Repositories
             return result;
         }
 
-        public async Task<List<DashboardExpenses>> GetDashboardExpensesAsync(string userId)
+        public async Task<List<DashboardTypeValue>> GetDashboardExpensesAsync(string userId)
         {
             var result = await _context.Transactions
                 .Where(t => t.User.Trim() == userId.Trim() && t.TrnType == "EXP")
@@ -156,7 +156,29 @@ namespace INFRASTRUCTURE.Repositories
                     (t, a) => new { Transaction = t, Account = a }
                 )
                 .GroupBy(r=> r.Account)
-                .Select(g => new DashboardExpenses
+                .Select(g => new DashboardTypeValue
+                {
+                    Type = g.Key.Name,                   // Account name
+                    Value = g.Sum(x => x.Transaction.Amount) // Total amount
+                })
+                .ToListAsync();
+
+
+            return result;
+        }
+
+        public async Task<List<DashboardTypeValue>> GetDashboardIncomeAsync(string userId)
+        {
+            var result = await _context.Transactions
+                .Where(t => t.User.Trim() == userId.Trim() && t.TrnType == "INC" && t.Reason != "MONTH END PROCESS")
+                .Join(
+                    _context.Accounts.Where(a => a.Active == 'Y'),
+                    t => t.Account,
+                    a => a.Id,
+                    (t, a) => new { Transaction = t, Account = a }
+                )
+                .GroupBy(r => r.Account)
+                .Select(g => new DashboardTypeValue
                 {
                     Type = g.Key.Name,                   // Account name
                     Value = g.Sum(x => x.Transaction.Amount) // Total amount
