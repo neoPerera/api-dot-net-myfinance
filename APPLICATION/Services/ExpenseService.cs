@@ -8,7 +8,7 @@ namespace APPLICATION.Services
     public class ExpenseService(ICommonRepository _commonRepository) : IExpenseService
     {
  
-        public async Task<RefResponse> AddExpenseAsync(AddRefRequest request)
+        public async Task<CommonResponse> AddExpenseAsync(AddRefRequest request)
         {
             var Entity = new Expense
             {
@@ -20,11 +20,11 @@ namespace APPLICATION.Services
             try
             {
                 await _commonRepository.SaveAsync<Expense>(Entity);
-                return new ResponseService<RefResponse>().Response;
+                return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)
             {
-                return new ResponseService<RefResponse>(e).Response;
+                return new ResponseService<CommonResponse>(e).Response;
             }
         }
 
@@ -43,12 +43,12 @@ namespace APPLICATION.Services
             return mappedExpenses;
         }
 
-        public async Task<RefResponse> GetExpenseSequenceAsync()
+        public async Task<CommonResponse> GetExpenseSequenceAsync()
         {
             var sequence = await _commonRepository.GetSequenceAsync("expense_sequence", 3);
             string currentDate = DateTime.Now.ToString("yyyyMMdd");
             var response = new { Output_value = $"EXM{currentDate}{sequence}" };
-            return new ResponseService<RefResponse>(response).Response;
+            return new ResponseService<CommonResponse>(response).Response;
         }
     }
 }

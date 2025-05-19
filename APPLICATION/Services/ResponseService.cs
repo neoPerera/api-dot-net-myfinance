@@ -12,9 +12,9 @@ namespace APPLICATION.Services
 
         public ResponseService()
         {
-            if (typeof(T) == typeof(RefResponse))
+            if (typeof(T) == typeof(CommonResponse))
             {
-                var response = new RefResponse
+                var response = new CommonResponse
                 {
                     StatusCode = 200,
                     Data = new { isValid = true }
@@ -25,9 +25,9 @@ namespace APPLICATION.Services
 
         public ResponseService(object data)
         {
-            if (typeof(T) == typeof(RefResponse))
+            if (typeof(T) == typeof(CommonResponse))
             {
-                var response = new RefResponse
+                var response = new CommonResponse
                 {
                     StatusCode = 200,
                     Data = data
@@ -38,16 +38,16 @@ namespace APPLICATION.Services
 
         public ResponseService(Exception ex)
         {
-            if (typeof(T) == typeof(RefResponse))
+            if (typeof(T) == typeof(CommonResponse))
             {
                 var detail = ex.InnerException is PostgresException pgEx
                     ? pgEx.MessageText
                     : ex.Message ?? "ERROR";
 
-                var response = new RefResponse
+                var response = new CommonResponse
                 {
                     StatusCode = 400,
-                    Data = new { isValid = false, error = new RefError { Detail = detail } }
+                    Data = new { isValid = false, error = new CommonError { Detail = detail } }
                 };
 
                 Response = (T)(object)response;

@@ -9,7 +9,7 @@ namespace APPLICATION.Interfaces
 {
     public interface ITransactionService
     { 
-        Task<RefResponse> AddTransaction(AddTransactionRequest request);
+        Task<CommonResponse> AddTransaction(AddTransactionRequest request);
         public Task<GetTransactionSequenceResponse> GetExpenseSequenceAsync();
     }
 }

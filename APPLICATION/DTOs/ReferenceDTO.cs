@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace APPLICATION.DTOs
+﻿namespace APPLICATION.DTOs
 {
     public class GetRefListResponse
     {
@@ -17,13 +11,5 @@ namespace APPLICATION.DTOs
         public string StrId { get; set; }
         public string StrName { get; set; }
     }
-    public class RefResponse
-    {
-        public int StatusCode { get; set; }
-        public object Data { get; set; }
-    }
-    public class RefError
-    {
-        public object Detail { get; set; }
-    }
+    
 }

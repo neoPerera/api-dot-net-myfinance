@@ -7,7 +7,7 @@ namespace APPLICATION.Services
 {
     public class IncomeService(ICommonRepository _commonRepository) : IIncomeService
     {
-        public async Task<RefResponse> GetIncomeListAsync()
+        public async Task<CommonResponse> GetIncomeListAsync()
         {
             var incomes = await _commonRepository.GetListAsync<Income>(filter: x => x.Active == '1');
             var mappedIncomes = incomes.Select(x => new GetRefListResponse
@@ -16,10 +16,10 @@ namespace APPLICATION.Services
                 Str_name = x.Name,
                 Dtm_date = x.Date.ToString("yyyy-MM-dd")
             }).ToList();
-            return new ResponseService<RefResponse>(mappedIncomes).Response;
+            return new ResponseService<CommonResponse>(mappedIncomes).Response;
            // return mappedIncomes;
         }
-        public async Task<RefResponse> GetIncomeSequenceAsync()
+        public async Task<CommonResponse> GetIncomeSequenceAsync()
         {
             try
             {
@@ -27,14 +27,14 @@ namespace APPLICATION.Services
                 var sequence = await _commonRepository.GetSequenceAsync("income_sequence",3);
                 string currentDate = DateTime.Now.ToString("yyyyMMdd");
                 var response = new { Output_value = $"INC{currentDate}{sequence}" };
-                return new ResponseService<RefResponse>(response).Response;
+                return new ResponseService<CommonResponse>(response).Response;
             }
             catch (Exception e)
             {
-                return new ResponseService<RefResponse>(e).Response;
+                return new ResponseService<CommonResponse>(e).Response;
             }
         }
-        public async Task<RefResponse> AddIncomeAsync(AddRefRequest request)
+        public async Task<CommonResponse> AddIncomeAsync(AddRefRequest request)
         { 
             var Entity = new Income
             {
@@ -46,11 +46,11 @@ namespace APPLICATION.Services
             try
             {
                 await _commonRepository.SaveAsync<Income>(Entity);
-                return new ResponseService<RefResponse>().Response;
+                return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)
             {
-                return new ResponseService<RefResponse>(e).Response;
+                return new ResponseService<CommonResponse>(e).Response;
             }
         }
     }
