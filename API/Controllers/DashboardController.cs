@@ -16,12 +16,37 @@ namespace API.Controllers
             _dashboardService = dashboardService;
         }
 
-        // GET: /Dashboard
+
         [HttpGet]
-        public async Task<IActionResult> GetDashboard()
+        [Route("getdashboardaccountbalances")]
+        public async Task<IActionResult> GetDashboardAccountBalances()
         {
-            var result = await _dashboardService.GetDashboardDataAsync();
-            return Ok(result);
+            var result = await _dashboardService.GetDashboardAccountBalancesAsync();
+            return StatusCode(result.StatusCode, result.Data);
+        }
+
+        [HttpGet]
+        [Route("getdashboardaccountincomes")]
+        public async Task<IActionResult> GetDashboardAccountIncomes()
+        {
+            var result = await _dashboardService.GetDashboardAccountIncomesAsync();
+            return StatusCode(result.StatusCode, result.Data);
+        }
+
+        [HttpGet]
+        [Route("getdashboardaccountexpenses")]
+        public async Task<IActionResult> GetDashboardAccountExpenses()
+        {
+            var result = await _dashboardService.GetDashboardAccountExpensesAsync();
+            return StatusCode(result.StatusCode, result.Data);
+        }
+
+        [HttpGet]
+        [Route("getdashboardtransactions")]
+        public async Task<IActionResult> GetDashboardTransactions()
+        {
+            var result = await _dashboardService.GetDashboardTransactionsAsync();
+            return StatusCode(result.StatusCode, result.Data);
         }
     }
 }
