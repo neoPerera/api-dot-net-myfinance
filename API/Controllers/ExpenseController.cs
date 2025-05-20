@@ -1,5 +1,6 @@
 ﻿using APPLICATION.DTOs;
 using APPLICATION.Interfaces;
+using APPLICATION.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,12 @@ namespace API.Controllers
         public async Task<IActionResult> AddExpense([FromBody] AddRefRequest request)
         {
             var result = await _expenseService.AddExpenseAsync(request);
+            return StatusCode(result.StatusCode, result.Data);
+        }
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateIncome([FromBody] UpdateRefRequest request)
+        {
+            var result = await _expenseService.UpdateExpenseAsync(request);
             return StatusCode(result.StatusCode, result.Data);
         }
     }

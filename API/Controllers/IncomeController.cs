@@ -32,5 +32,11 @@ namespace API.Controllers
             var result = await _incomeService.AddIncomeAsync(request);
             return StatusCode(result.StatusCode, result.Data);
         }
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateIncome([FromBody] UpdateRefRequest request)
+        {
+            var result = await _incomeService.UpdateIncomeAsync(request);
+            return StatusCode(result.StatusCode, result.Data);
+        }
     }
 }

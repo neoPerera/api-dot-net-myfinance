@@ -53,5 +53,30 @@ namespace APPLICATION.Services
                 return new ResponseService<CommonResponse>(e).Response;
             }
         }
+
+        public async Task<CommonResponse> UpdateIncomeAsync(UpdateRefRequest request)
+        {
+            try
+            {
+                // Fetch the existing entity by ID
+                var existingIncome = await _commonRepository.GetByIdAsync<Income>(request.Str_id);
+                if (existingIncome == null)
+                {
+                    return new ResponseService<CommonResponse>("Income record not found.").Response;
+                }
+
+                // Update the column(s)
+                existingIncome.Name = request.Updates.Str_name;
+
+                // Save changes
+                await _commonRepository.UpdateAsync<Income>(existingIncome);
+
+                return new ResponseService<CommonResponse>().Response;
+            }
+            catch (Exception e)
+            {
+                return new ResponseService<CommonResponse>(e).Response;
+            }
+        }
     }
 }

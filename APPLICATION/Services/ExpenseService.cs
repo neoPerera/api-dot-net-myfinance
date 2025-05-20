@@ -50,5 +50,30 @@ namespace APPLICATION.Services
             var response = new { Output_value = $"EXM{currentDate}{sequence}" };
             return new ResponseService<CommonResponse>(response).Response;
         }
+
+        public async Task<CommonResponse> UpdateExpenseAsync(UpdateRefRequest request)
+        {
+            try
+            {
+                // Fetch the existing entity by ID
+                var existingEntity = await _commonRepository.GetByIdAsync<Expense>(request.Str_id);
+                if (existingEntity == null)
+                {
+                    return new ResponseService<CommonResponse>("Income record not found.").Response;
+                }
+
+                // Update the column(s)
+                existingEntity.Name = request.Updates.Str_name;
+
+                // Save changes
+                await _commonRepository.UpdateAsync<Expense>(existingEntity);
+
+                return new ResponseService<CommonResponse>().Response;
+            }
+            catch (Exception e)
+            {
+                return new ResponseService<CommonResponse>(e).Response;
+            }
+        }
     }
 }

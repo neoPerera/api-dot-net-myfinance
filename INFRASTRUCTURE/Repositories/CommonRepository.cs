@@ -62,5 +62,15 @@ namespace INFRASTRUCTURE.Repositories
 
             return await dbSet.FirstOrDefaultAsync(filter);
         }
+        public async Task<TEntity?> GetByIdAsync<TEntity>(string id) where TEntity : class
+        {
+            return await _context.Set<TEntity>().FindAsync(id);
+        }
+        public async Task UpdateAsync<TEntity>(TEntity entity) where TEntity : class
+        {
+            _context.Set<TEntity>().Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

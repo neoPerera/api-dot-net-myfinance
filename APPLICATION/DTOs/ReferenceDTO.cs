@@ -11,5 +11,15 @@
         public string StrId { get; set; }
         public string StrName { get; set; }
     }
-    
+
+    public class UpdateRefRequest
+    {
+        public string Str_id { get; set; }
+        public UpdateRefRequestUpdateFields Updates { get; set; }
+    }
+
+    public class UpdateRefRequestUpdateFields
+    {
+        public string Str_name { get; set; }
+    }
 }

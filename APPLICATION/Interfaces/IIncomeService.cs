@@ -7,5 +7,6 @@ namespace APPLICATION.Interfaces
         Task<CommonResponse> GetIncomeListAsync();
         Task<CommonResponse> GetIncomeSequenceAsync();
         Task<CommonResponse> AddIncomeAsync(AddRefRequest request);
+        Task<CommonResponse> UpdateIncomeAsync(UpdateRefRequest request);
     }
 }

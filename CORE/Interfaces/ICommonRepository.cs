@@ -18,5 +18,8 @@ namespace CORE.Interfaces
         Task<TEntity?> GetFirstOrDefaultAsync<TEntity>(
             Expression<Func<TEntity, bool>>? filter = null
         ) where TEntity : class;
+
+        Task<TEntity?> GetByIdAsync<TEntity>(string id) where TEntity : class;
+        Task UpdateAsync<TEntity>(TEntity entity) where TEntity : class;
     }
 }
