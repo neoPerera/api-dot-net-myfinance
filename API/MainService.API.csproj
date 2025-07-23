@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\APPLICATION\APPLICATION.csproj" />
-    <ProjectReference Include="..\INFRASTRUCTURE\INFRASTRUCTURE.csproj" />
+    <ProjectReference Include="..\APPLICATION\MainService.APPLICATION.csproj" />
+    <ProjectReference Include="..\INFRASTRUCTURE\MainServiceINFRASTRUCTURE.csproj" />
   </ItemGroup>
 
 </Project>

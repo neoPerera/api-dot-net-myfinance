@@ -11,7 +11,11 @@ namespace INFRASTRUCTURE.Persistence
         // Define DB sets (tables)
         public DbSet<User> Users { get; set; }
         public DbSet<Form> Forms { get; set; }
-
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+        public DbSet<Income> Incomes { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<TransactionRecord> TransactionRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +23,11 @@ namespace INFRASTRUCTURE.Persistence
 
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new FormConfiguration());
+            modelBuilder.ApplyConfiguration(new AccountConfiguration());
+            modelBuilder.ApplyConfiguration(new ExpenseConfiguration());
+            modelBuilder.ApplyConfiguration(new IncomeConfiguration());
+            modelBuilder.ApplyConfiguration(new TransactionConfiguration());
+            modelBuilder.ApplyConfiguration(new TransactionRecordConfiguration());
 
         }
     }

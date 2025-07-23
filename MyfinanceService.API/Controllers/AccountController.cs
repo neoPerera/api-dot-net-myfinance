@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Authorize]
-    [Route("api/reference/ref-accounts")]
+    [Route("reference/ref-accounts")]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _iAccountService;

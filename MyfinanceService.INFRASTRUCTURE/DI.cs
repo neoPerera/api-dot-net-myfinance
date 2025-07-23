@@ -20,6 +20,16 @@ namespace INFRASTRUCTURE
             
             services.AddScoped<IFormService, FormService>();
 
+            services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IDashboardRepository, DashboardRepository>();
+
+            services.AddScoped<IIncomeService, IncomeService>();
+
+            services.AddScoped<IExpenseService, ExpenseService>();
+
+            services.AddScoped<IAccountService, AccountService>();
+
+            services.AddScoped<ITransactionService, TransactionService>();
 
             return services;
         }

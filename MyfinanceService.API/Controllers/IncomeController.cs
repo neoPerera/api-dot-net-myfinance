@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Authorize]
-    [Route("api/reference/ref-income")]
+    [Route("reference/ref-income")]
     public class IncomeController : ControllerBase
     {
         private readonly IIncomeService _incomeService;

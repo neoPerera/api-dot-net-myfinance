@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     [Authorize]
-    [Route("api/reference/ref-expense")]
+    [Route("reference/ref-expense")]
     public class ExpenseController : ControllerBase
     {
         private readonly IExpenseService _expenseService;
