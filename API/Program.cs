@@ -60,6 +60,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseRouting();
 // Apply CORS policy globally (before Authorization)
 app.UseCors("AllowFrontend");
 
