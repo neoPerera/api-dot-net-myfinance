@@ -26,11 +26,11 @@ builder.Services.AddApplicationServices();
 // Add CORS services
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()         // Allow all origins
-              .AllowAnyMethod()         // Allow all HTTP methods (GET, POST, etc.)
-              .AllowAnyHeader();        // Allow all headers
+        policy.WithOrigins("https://stage-myfinance.onrender.com/",  "https://myfinance.chanuthperera.com", "http://localhost:3000") // Frontend dev server (adjust if different)
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 builder.Services.AddHttpContextAccessor();
