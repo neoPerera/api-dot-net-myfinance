@@ -28,9 +28,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://stage-myfinance.onrender.com",  "https://myfinance.chanuthperera.com", "http://localhost:3000") // Frontend dev server (adjust if different)
+        policy.WithOrigins("https://stage-myfinance.onrender.com", "https://myfinance.chanuthperera.com", "http://localhost:3000")
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials(); // Allow credentials for authenticated requests
     });
 });
 builder.Services.AddHttpContextAccessor();
@@ -64,7 +65,8 @@ app.UseRouting();
 // Apply CORS policy globally (before Authorization)
 app.UseCors("AllowFrontend");
 
-//app.UseHttpsRedirection();
+// HTTPS redirection is handled by Cloudflare, so we don't need this
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();  // Add Authentication middleware
 app.UseAuthorization();   // Add Authorization middleware
