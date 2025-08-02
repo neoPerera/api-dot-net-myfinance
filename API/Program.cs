@@ -61,7 +61,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 // Apply CORS policy globally (before Authorization)
-app.UseCors("AllowAllOrigins");
+app.UseCors("AllowFrontend");
 
 //app.UseHttpsRedirection();
 
