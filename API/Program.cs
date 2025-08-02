@@ -28,7 +28,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://stage-myfinance.onrender.com/",  "https://myfinance.chanuthperera.com", "http://localhost:3000") // Frontend dev server (adjust if different)
+        policy.WithOrigins("https://stage-myfinance.onrender.com",  "https://myfinance.chanuthperera.com", "http://localhost:3000") // Frontend dev server (adjust if different)
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
