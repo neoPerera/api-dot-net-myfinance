@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+  # Main Service - Core API
+  main-service:
+    container_name: myfinance-main-service
+    image: chanuth/api-dot-net-myfinance:${IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: MainService.API/Dockerfile
+    ports:
+      - "5057:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=159.13.52.219;Port=5432;Database=pgsql_database;Username=pgsql;Password=databasepassword;SSL Mode=Disable;
+      - JwtSecretKey=your-256-bit-secret-key-here-that-is-32-characters
+      - TZ=Asia/Colombo
+      - SERVICE_NAME=MainService
+      - SERVICE_VERSION=1.0.0
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - myfinance-network
+    restart: unless-stopped
+    pull_policy: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # API Gateway / Reverse Proxy
+  api-gateway:
+    container_name: myfinance-api-gateway
+    image: nginx:alpine
+    ports:
+      - "5000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - main-service
+    networks:
+      - myfinance-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Service Discovery (optional - for future microservices)
+  # consul:
+  #   image: consul:latest
+  #   container_name: myfinance-consul
+  #   ports:
+  #     - "8500:8500"
+  #   networks:
+  #     - myfinance-network
+  #   restart: unless-stopped
+
+  # Message Queue (optional - for future microservices)
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: myfinance-rabbitmq
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=admin
+  #     - RABBITMQ_DEFAULT_PASS=password
+  #   networks:
+  #     - myfinance-network
+  #   restart: unless-stopped
+
+networks:
+  myfinance-network:
+    external: true 
