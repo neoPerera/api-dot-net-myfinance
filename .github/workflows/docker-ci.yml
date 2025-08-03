@@ -1,4 +1,4 @@
-name: CI - Build and Push Docker Image
+name: CI - Build and Push Docker Images
 
 on:
   push:
@@ -36,10 +36,18 @@ jobs:
           fi
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: 📦 Build Docker image
+      - name: 📦 Build MainService Docker image
         run: |
           docker build -f MainService.API/Dockerfile -t chanuth/api-dot-net-myfinance:${IMAGE_TAG} .
 
-      - name: 📤 Push Docker image
+      - name: 📦 Build MyFinanceService Docker image
+        run: |
+          docker build -f MyFinanceService.API/Dockerfile -t chanuth/myfinance-service:${IMAGE_TAG} .
+
+      - name: 📤 Push MainService Docker image
         run: |
           docker push chanuth/api-dot-net-myfinance:${IMAGE_TAG}
+
+      - name: 📤 Push MyFinanceService Docker image
+        run: |
+          docker push chanuth/myfinance-service:${IMAGE_TAG}

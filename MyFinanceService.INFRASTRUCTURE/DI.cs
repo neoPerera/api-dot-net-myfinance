@@ -1,30 +1,34 @@
-﻿
-using MainService.APPLICATION.Interfaces;
-using MainService.APPLICATION.Services;
-using MainService.CORE.Interfaces;
-using MainService.INFRASTRUCTURE.Persistence;
-using MainService.INFRASTRUCTURE.Repositories;
+using MyFinanceService.APPLICATION.Interfaces;
+using MyFinanceService.APPLICATION.Services;
+using MyFinanceService.INFRASTRUCTURE.Repositories;
+using MyFinanceService.INFRASTRUCTURE.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using MyFinanceService.CORE.Interfaces;
 
-namespace MainService.INFRASTRUCTURE
+namespace MyFinanceService.INFRASTRUCTURE
 {
     public static class DI
     {
-        // Register Application Services
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<ICommonRepository, CommonRepository>();
-
-            services.AddScoped<ILogin, LoginService>();
             
-            services.AddScoped<IFormService, FormService>();
-
+            // Business Logic Services
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IIncomeService, IncomeService>();
+            services.AddScoped<IExpenseService, ExpenseService>();
+            services.AddScoped<IDashboardService, DashboardService>();
+            
+            // Common Services
+            services.AddScoped<ICommonRepository, CommonRepository>();
+            services.AddScoped<IDashboardRepository, DashboardRepository>();
+            
             return services;
         }
 
-        // Register Infrastructure Services (Database & Repositories)
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -34,8 +38,9 @@ namespace MainService.INFRASTRUCTURE
                 throw new ArgumentNullException("Database connection string is missing from configuration.");
             }
 
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<MyFinanceDbContext>(options =>
                 options.UseNpgsql(connectionString));
+            
             return services;
         }
     }
