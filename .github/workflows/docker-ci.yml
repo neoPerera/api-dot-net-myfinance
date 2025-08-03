@@ -38,7 +38,7 @@ jobs:
 
       - name: 📦 Build Docker image
         run: |
-          docker build -f API/Dockerfile -t chanuth/api-dot-net-myfinance:${IMAGE_TAG} .
+          docker build -f MainService.API\Dockerfile -t chanuth/api-dot-net-myfinance:${IMAGE_TAG} .
 
       - name: 📤 Push Docker image
         run: |
