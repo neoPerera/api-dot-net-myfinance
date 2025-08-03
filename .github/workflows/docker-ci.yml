@@ -46,8 +46,8 @@ jobs:
 
       - name: 📤 Push MainService Docker image
         run: |
-          docker push chanuth/api-dot-net-myfinance:${IMAGE_TAG}
+          docker push chanuth/api-dot-net-myfinance:main.${IMAGE_TAG}
 
       - name: 📤 Push MyFinanceService Docker image
         run: |
-          docker push chanuth/myfinance-service:${IMAGE_TAG}
+          docker push chanuth/myfinance-service:myfinance.${IMAGE_TAG}
