@@ -50,4 +50,4 @@ jobs:
 
       - name: 📤 Push MyFinanceService Docker image
         run: |
-          docker push chanuth/myfinance-service:myfinance.${IMAGE_TAG}
+          docker push chanuth/api-dot-net-myfinance:myfinance.${IMAGE_TAG}
