@@ -21,6 +21,9 @@ namespace MainService.INFRASTRUCTURE
             
             services.AddScoped<IFormService, FormService>();
 
+            services.AddScoped<IActivityLogService, ActivityLogService>();
+            services.AddScoped<IKafkaProducerService, KafkaProducerService>();
+
             return services;
         }
 

@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFinanceService.APPLICATIO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFinanceService.INFRASTRUCTURE", "MyFinanceService.INFRASTRUCTURE\MyFinanceService.INFRASTRUCTURE.csproj", "{9FEC326D-5FA8-4D4E-879B-81A08D221841}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLogWorker", "CommonLogWorker\CommonLogWorker.csproj", "{A612CB7C-2D99-4BFC-924B-55F708F00F50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,18 @@ Global
 		{9FEC326D-5FA8-4D4E-879B-81A08D221841}.Release|x64.Build.0 = Release|Any CPU
 		{9FEC326D-5FA8-4D4E-879B-81A08D221841}.Release|x86.ActiveCfg = Release|Any CPU
 		{9FEC326D-5FA8-4D4E-879B-81A08D221841}.Release|x86.Build.0 = Release|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Debug|x64.Build.0 = Debug|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Debug|x86.Build.0 = Debug|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Release|x64.ActiveCfg = Release|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Release|x64.Build.0 = Release|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Release|x86.ActiveCfg = Release|Any CPU
+		{A612CB7C-2D99-4BFC-924B-55F708F00F50}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
