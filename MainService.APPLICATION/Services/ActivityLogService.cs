@@ -19,7 +19,7 @@ namespace MainService.APPLICATION.Services
         public async Task LogAsync(ActivityLogMessage log, CancellationToken cancellationToken = default)
         {
             var json = JsonConvert.SerializeObject(log);
-            await _kafkaProducer.ProduceAsync(json, cancellationToken);
+            await _kafkaProducer.ProduceAsync(json, "activitylog", cancellationToken);
         }
 
         public Task Info(string message, string? userId = null, string? action = null) =>
