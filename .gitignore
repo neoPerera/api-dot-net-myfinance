@@ -495,3 +495,9 @@ $RECYCLE.BIN/
 /.vs/API/v17
 API/appsettings.json
 /INFRASTRUCTURE/obj
+
+# Ignore all appsettings.json files (anywhere in the repo)
+**/appsettings.json
+
+# Ignore environment-specific configs too
+**/appsettings.*.json
