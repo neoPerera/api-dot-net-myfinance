@@ -36,7 +36,7 @@ namespace CommonLogWorker
             using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
             consumer.Subscribe("activitylog");
 
-            _logger.LogInformation("KafkaMongoLogWorker started, consuming messages on topic: {topic} ...",_topic);
+            _logger.LogInformation("KafkaMongoLogWorker started, consuming messages on topic: activitylog ...");
 
             while (!stoppingToken.IsCancellationRequested)
             {

@@ -25,7 +25,7 @@ namespace MainService.APPLICATION.Services
         public Task Info(string message, string? userId = null, string? action = null) =>
             LogAsync(new ActivityLogMessage
             {
-                Level = LogLevel.Information,
+                Level = LogLevel.Information.ToString(),
                 Message = message,
                 UserId = userId,
                 Action = action
@@ -34,7 +34,7 @@ namespace MainService.APPLICATION.Services
         public Task Warn(string message, string? userId = null, string? action = null) =>
             LogAsync(new ActivityLogMessage
             {
-                Level = LogLevel.Warning,
+                Level = LogLevel.Warning.ToString(),
                 Message = message,
                 UserId = userId,
                 Action = action
@@ -43,7 +43,7 @@ namespace MainService.APPLICATION.Services
         public Task Error(string message, string? userId = null, string? action = null) =>
             LogAsync(new ActivityLogMessage
             {
-                Level = LogLevel.Error,
+                Level = LogLevel.Error.ToString(),
                 Message = message,
                 UserId = userId,
                 Action = action
@@ -59,7 +59,7 @@ namespace MainService.APPLICATION.Services
 
             return LogAsync(new ActivityLogMessage
             {
-                Level = LogLevel.Debug,
+                Level = LogLevel.Debug.ToString(),
                 Message = message,
                 UserId = userId,
                 Action = action
