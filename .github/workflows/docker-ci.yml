@@ -43,6 +43,9 @@ jobs:
       - name: 📦 Build MyFinanceService Docker image
         run: |
           docker build -f MyFinanceService.API/Dockerfile -t chanuth/api-dot-net-myfinance:myfinance.${IMAGE_TAG} .
+      - name: 📦 Build CommonLogWorker Docker image
+        run: |
+          docker build -f CommonLogWorker/Dockerfile -t chanuth/api-dot-net-myfinance:commonlogworker.${IMAGE_TAG} .
 
       - name: 📤 Push MainService Docker image
         run: |
@@ -51,3 +54,8 @@ jobs:
       - name: 📤 Push MyFinanceService Docker image
         run: |
           docker push chanuth/api-dot-net-myfinance:myfinance.${IMAGE_TAG}
+          
+      - name: 📤 Push CommonLogWorker Docker image
+        run: |
+          docker push chanuth/api-dot-net-myfinance:commonlogworker.${IMAGE_TAG}
+
