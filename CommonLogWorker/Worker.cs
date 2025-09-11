@@ -18,8 +18,6 @@ namespace CommonLogWorker
             _logger = logger;
 
             _bootstrapServers = config["Kafka:BootstrapServers"];
-            _topic = config["Kafka:Topic"];
-            _groupId = config["Kafka:GroupId"];
 
             var mongoClient = new MongoClient(config["MongoDB:ConnectionString"]);
             var database = mongoClient.GetDatabase(config["MongoDB:Database"]);
@@ -31,12 +29,12 @@ namespace CommonLogWorker
             var consumerConfig = new ConsumerConfig
             {
                 BootstrapServers = _bootstrapServers,
-                GroupId = _groupId,
+                GroupId = "activitylog-group",
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
             using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
-            consumer.Subscribe(_topic);
+            consumer.Subscribe("activitylog");
 
             _logger.LogInformation("KafkaMongoLogWorker started, consuming messages on topic: {topic} ...",_topic);
 
