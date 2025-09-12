@@ -10,39 +10,55 @@ namespace MainService.APPLICATION.Interfaces
     {
         Task Info(
                     string message,
-                    string? userId = null,
                     [CallerFilePath] string filePath = "",
                     [CallerMemberName] string memberName = "",
                     [CallerLineNumber] int lineNumber = 0);
 
         Task Warn(
             string message,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0);
 
         Task Error(
             string message,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0);
 
         Task Debug(
             string message,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0);
 
-        Task Debug<T>(
+        Task Info<T>(
             string message,
             T? variable = default,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0,
             [CallerArgumentExpression("variable")] string variableName = "");
+
+        Task Debug<T>(
+            string message,
+            T? variable = default,
+            [CallerFilePath] string filePath = "",
+            [CallerMemberName] string memberName = "",
+            [CallerLineNumber] int lineNumber = 0,
+            [CallerArgumentExpression("variable")] string variableName = "");
+        Task Error<T>(
+        T? variable = default,
+        [CallerFilePath] string filePath = "",
+        [CallerMemberName] string memberName = "",
+        [CallerLineNumber] int lineNumber = 0,
+        [CallerArgumentExpression("variable")] string variableName = "");
+
+        Task FlushAsync(string message,
+            string? userId = null,
+            [CallerFilePath] string filePath = "",
+            [CallerMemberName] string memberName = "",
+            [CallerLineNumber] int lineNumber = 0);
+        void ChangeLog<T>(T variable, [CallerArgumentExpression("variable")] string variableName = "");
     }
 }

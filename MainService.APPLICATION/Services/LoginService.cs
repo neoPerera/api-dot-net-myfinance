@@ -11,7 +11,7 @@ using MainService.CORE.Entities;
 
 namespace MainService.APPLICATION.Services
 {
-    public class LoginService(ICommonRepository _commonRepository, IConfiguration configuration) : ILogin
+    public class LoginService(ICommonRepository _commonRepository, IConfiguration configuration, IActivityLogService _logService) : ILogin
     {
         private readonly string _jwtSecretKey = configuration["JwtSecretKey"] ?? throw new ArgumentNullException(nameof(configuration), "JwtSecretKey is not configured.");
 
@@ -23,6 +23,9 @@ namespace MainService.APPLICATION.Services
                 return new LoginResponse(false, "Login unsuccessful");
             }
             var token = GenerateJwtToken(username);
+            _logService.ChangeLog(username);
+            _logService.ChangeLog(token);
+            await _logService.FlushAsync("Login Successful");
             return new LoginResponse(true, "Login successful", token);
         }
 

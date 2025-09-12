@@ -27,7 +27,7 @@ namespace MainService.API.Controllers
             }
             else
             {
-                await _logService.Error("Login failed");
+                //await _logService.Error(message:"Login failed");
                 return Unauthorized(new { message = result.Message });
             }
         }
