@@ -18,7 +18,7 @@ namespace CommonLogWorker
             _logger = logger;
 
             _bootstrapServers = config["Kafka:BootstrapServers"];
-
+            _topic = config["Kafka:Topic"];
             var mongoClient = new MongoClient(config["MongoDB:ConnectionString"]);
             var database = mongoClient.GetDatabase(config["MongoDB:Database"]);
             _collection = database.GetCollection<ActivityLog>(config["MongoDB:Collection"]);
@@ -34,9 +34,9 @@ namespace CommonLogWorker
             };
 
             using var consumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
-            consumer.Subscribe("activitylog");
+            consumer.Subscribe(_topic);
 
-            _logger.LogInformation("KafkaMongoLogWorker started, consuming messages on topic: activitylog ...");
+            _logger.LogInformation("KafkaMongoLogWorker started, consuming messages on topic: {topic} ...", _topic);
 
             while (!stoppingToken.IsCancellationRequested)
             {

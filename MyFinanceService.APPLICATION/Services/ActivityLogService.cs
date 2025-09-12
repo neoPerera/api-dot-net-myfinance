@@ -1,11 +1,12 @@
-﻿using MyFinanceService.Application.DTOs;
-using MyFinanceService.APPLICATION.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MyFinanceService.Application.DTOs;
+using MyFinanceService.APPLICATION.Interfaces;
 using Newtonsoft.Json;
-using System.Security.Claims;
-using System.Runtime.CompilerServices;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace MyFinanceService.APPLICATION.Services
 {
@@ -16,15 +17,18 @@ namespace MyFinanceService.APPLICATION.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AsyncLocal<Dictionary<string, object?>> _currentChangeLog = new();
         private readonly AsyncLocal<Dictionary<string, int>> _changeCounters = new();
+        private readonly string _logTopic; 
 
         public ActivityLogService(
             IKafkaProducerService kafkaProducer,
             ILogger<ActivityLogService> logger,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IConfiguration configuration)
         {
             _kafkaProducer = kafkaProducer;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _logTopic = configuration["Kafka:logTopic"];
         }
 
         private string? GetUserIdFromJwt()
@@ -42,7 +46,7 @@ namespace MyFinanceService.APPLICATION.Services
         private async Task LogAsync(ActivityLogMessage log, CancellationToken cancellationToken = default)
         {
             var json = JsonConvert.SerializeObject(log);
-            await _kafkaProducer.ProduceAsync(json, "activitylog", cancellationToken);
+            await _kafkaProducer.ProduceAsync(json, _logTopic, cancellationToken);
         }
 
         private Task Log(
