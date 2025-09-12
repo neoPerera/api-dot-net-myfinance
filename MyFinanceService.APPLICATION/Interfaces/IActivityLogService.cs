@@ -51,6 +51,12 @@ namespace MyFinanceService.APPLICATION.Interfaces
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0,
             [CallerArgumentExpression("variable")] string variableName = "");
+        Task Error<T>(
+        T? variable = default,
+        [CallerFilePath] string filePath = "",
+        [CallerMemberName] string memberName = "",
+        [CallerLineNumber] int lineNumber = 0,
+        [CallerArgumentExpression("variable")] string variableName = "");
 
         Task FlushAsync(string message,
             string? userId = null,

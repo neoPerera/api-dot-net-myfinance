@@ -5,7 +5,7 @@ using MyFinanceService.CORE.Interfaces;
 
 namespace MyFinanceService.APPLICATION.Services
 {
-    public class IncomeService(ICommonRepository _commonRepository) : IIncomeService
+    public class IncomeService(ICommonRepository _commonRepository, IActivityLogService _logService) : IIncomeService
     {
         public async Task<CommonResponse> GetIncomeListAsync()
         {
@@ -46,10 +46,12 @@ namespace MyFinanceService.APPLICATION.Services
             try
             {
                 await _commonRepository.SaveAsync<Income>(Entity);
+                await _logService.Info("Record Added to Income master", Entity);
                 return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)
             {
+                await _logService.Error(e);
                 return new ResponseService<CommonResponse>(e).Response;
             }
         }
@@ -59,18 +61,20 @@ namespace MyFinanceService.APPLICATION.Services
             try
             {
                 // Fetch the existing entity by ID
-                var existingIncome = await _commonRepository.GetByIdAsync<Income>(request.Str_id);
-                if (existingIncome == null)
+                var Entity = await _commonRepository.GetByIdAsync<Income>(request.Str_id);
+                if (Entity == null)
                 {
-                    return new ResponseService<CommonResponse>("Income record not found.").Response;
+                    string message = "Income record not found";
+                    await _logService.Error(message:message);
+                    return new ResponseService<CommonResponse>(message).Response;
                 }
 
-                // Update the column(s)
-                existingIncome.Name = request.Updates.Str_name;
-
+                _logService.ChangeLog(Entity.Name);
+                Entity.Name = request.Updates.Str_name;
+                _logService.ChangeLog(Entity.Name);
                 // Save changes
-                await _commonRepository.UpdateAsync<Income>(existingIncome);
-
+                await _commonRepository.UpdateAsync<Income>(Entity);
+                await _logService.FlushAsync("Income Updated");
                 return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)

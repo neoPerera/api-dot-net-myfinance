@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyFinanceService.APPLICATION.DTOs;
+﻿using MyFinanceService.APPLICATION.DTOs;
 using MyFinanceService.APPLICATION.Interfaces;
 using MyFinanceService.CORE.Entities;
 using MyFinanceService.CORE.Interfaces;
@@ -11,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace MyFinanceService.APPLICATION.Services
 {
-    public class TransactionService(IHttpContextAccessor _httpContextAccessor, ICommonRepository _commonRepository) : ITransactionService
+    public class TransactionService(IHttpContextAccessor _httpContextAccessor, ICommonRepository _commonRepository, IActivityLogService _logService) : ITransactionService
     {
         public async Task<GetTransactionSequenceResponse> GetExpenseSequenceAsync()
         {
@@ -104,17 +99,22 @@ namespace MyFinanceService.APPLICATION.Services
 
                         await _commonRepository.SaveAsync<Transaction>(transaction);
                         await _commonRepository.SaveAsync<Transaction>(mirrorTransaction);
+                        _logService.ChangeLog(transaction);
+                        _logService.ChangeLog(mirrorTransaction);
+                        await _logService.FlushAsync("Transaction with double entry inserted");
                     }
                     else
                     {
                         await _commonRepository.SaveAsync<Transaction>(transaction);
+                        await _logService.Info("Transaction Inserted", transaction);
                     }
 
                     return new ResponseService<CommonResponse>().Response;
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    return new ResponseService<CommonResponse>(ex).Response;
+                    await _logService.Error(e);
+                    return new ResponseService<CommonResponse>(e).Response;
                 }
             }
 

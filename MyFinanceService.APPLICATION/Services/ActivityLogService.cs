@@ -123,6 +123,14 @@ namespace MyFinanceService.APPLICATION.Services
             return Log(LogLevel.Debug.ToString(), message, Path.GetFileName(filePath), memberName, lineNumber, GetMetaDate(variableName, variable));
         }
 
+        public Task Error<T>(
+        T? variable = default,
+        [CallerFilePath] string filePath = "",
+        [CallerMemberName] string memberName = "",
+        [CallerLineNumber] int lineNumber = 0,
+        [CallerArgumentExpression("variable")] string variableName = "") =>
+        Log(LogLevel.Error.ToString(), "An Error occured while execution", Path.GetFileName(filePath), memberName, lineNumber, GetMetaDate(variableName, variable));
+
         public void ChangeLog<T>(T variable, [CallerArgumentExpression("variable")] string variableName = "")
         {
             if (_currentChangeLog.Value == null)

@@ -5,7 +5,7 @@ using MyFinanceService.CORE.Interfaces;
 
 namespace MyFinanceService.APPLICATION.Services
 {
-    public class ExpenseService(ICommonRepository _commonRepository) : IExpenseService
+    public class ExpenseService(ICommonRepository _commonRepository, IActivityLogService _logService) : IExpenseService
     {
  
         public async Task<CommonResponse> AddExpenseAsync(AddRefRequest request)
@@ -20,10 +20,12 @@ namespace MyFinanceService.APPLICATION.Services
             try
             {
                 await _commonRepository.SaveAsync<Expense>(Entity);
+                await _logService.Info("Record added to expense master", Entity);
                 return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)
             {
+                await _logService.Error(e);
                 return new ResponseService<CommonResponse>(e).Response;
             }
         }
@@ -31,6 +33,7 @@ namespace MyFinanceService.APPLICATION.Services
         public async Task<List<GetRefListResponse>> GetExpenseListAsync()
         {
             var expenses = await _commonRepository.GetListAsync<Expense>();
+
 
             var mappedExpenses = expenses.Select(x => new GetRefListResponse
             {
@@ -56,18 +59,21 @@ namespace MyFinanceService.APPLICATION.Services
             try
             {
                 // Fetch the existing entity by ID
-                var existingEntity = await _commonRepository.GetByIdAsync<Expense>(request.Str_id);
-                if (existingEntity == null)
+                var Entity = await _commonRepository.GetByIdAsync<Expense>(request.Str_id);
+                if (Entity == null)
                 {
-                    return new ResponseService<CommonResponse>("Income record not found.").Response;
+                    string message = "Expense record not found";
+                    await _logService.Error(message:message);
+                    return new ResponseService<CommonResponse>(message).Response;
                 }
-
+                _logService.ChangeLog(Entity.Name);
                 // Update the column(s)
-                existingEntity.Name = request.Updates.Str_name;
+                Entity.Name = request.Updates.Str_name;
+                _logService.ChangeLog(Entity.Name);
 
                 // Save changes
-                await _commonRepository.UpdateAsync<Expense>(existingEntity);
-
+                await _commonRepository.UpdateAsync<Expense>(Entity);
+                await _logService.FlushAsync("Expense Updated");
                 return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)

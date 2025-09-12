@@ -3,8 +3,6 @@ using MyFinanceService.APPLICATION.DTOs;
 using MyFinanceService.APPLICATION.Interfaces;
 using MyFinanceService.CORE.Entities;
 using MyFinanceService.CORE.Interfaces;
-using Newtonsoft.Json;
-using Npgsql;
 
 namespace MyFinanceService.APPLICATION.Services
 {
@@ -30,6 +28,7 @@ namespace MyFinanceService.APPLICATION.Services
             }
             catch (Exception e)
             {
+                await _logService.Error(e);
                 return new ResponseService<CommonResponse>(e).Response;
             }
         }
@@ -64,11 +63,12 @@ namespace MyFinanceService.APPLICATION.Services
                 var Entity = await _commonRepository.GetByIdAsync<Account>(request.Str_id);
                 if (Entity == null)
                 {
-                    return new ResponseService<CommonResponse>("Income record not found.").Response;
+                    string message = "Account record not found";
+                    await _logService.Error(message: message);
+                    return new ResponseService<CommonResponse>(message).Response;
                 }
                 _logService.ChangeLog(Entity.Name);
                 Entity.Name = request.Updates.Str_name;
-
                 _logService.ChangeLog(Entity.Name);
                 // Save changes
                 await _commonRepository.UpdateAsync<Account>(Entity);
@@ -79,6 +79,7 @@ namespace MyFinanceService.APPLICATION.Services
             }
             catch (Exception e)
             {
+                await _logService.Error(e);
                 return new ResponseService<CommonResponse>(e).Response;
             }
         }
