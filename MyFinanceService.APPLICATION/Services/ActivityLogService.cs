@@ -14,6 +14,8 @@ namespace MyFinanceService.APPLICATION.Services
         private readonly IKafkaProducerService _kafkaProducer;
         private readonly ILogger<ActivityLogService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly AsyncLocal<Dictionary<string, object?>> _currentChangeLog = new();
+        private readonly AsyncLocal<Dictionary<string, int>> _changeCounters = new();
 
         public ActivityLogService(
             IKafkaProducerService kafkaProducer,
@@ -46,7 +48,6 @@ namespace MyFinanceService.APPLICATION.Services
         private Task Log(
             string level,
             string message,
-            string? userId,
             string fileName,
             string memberName,
             int lineNumber,
@@ -58,7 +59,7 @@ namespace MyFinanceService.APPLICATION.Services
             {
                 Level = level,
                 Message = message,
-                UserId = userId ?? GetUserIdFromJwt(),
+                UserId = GetUserIdFromJwt(),
                 Action = action,
                 Metadata = metaData
             });
@@ -66,32 +67,50 @@ namespace MyFinanceService.APPLICATION.Services
 
         public Task Info(
             string message,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0) =>
-            Log(LogLevel.Information.ToString(), message, userId, Path.GetFileName(filePath), memberName, lineNumber);
+            Log(LogLevel.Information.ToString(), message, Path.GetFileName(filePath), memberName, lineNumber);
+
+
 
         public Task Warn(
             string message,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0) =>
-            Log(LogLevel.Warning.ToString(), message, userId, Path.GetFileName(filePath), memberName, lineNumber);
+            Log(LogLevel.Warning.ToString(), message, Path.GetFileName(filePath), memberName, lineNumber);
 
         public Task Error(
             string message,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0) =>
-            Log(LogLevel.Error.ToString(), message, userId, Path.GetFileName(filePath), memberName, lineNumber);
+            Log(LogLevel.Error.ToString(), message, Path.GetFileName(filePath), memberName, lineNumber);
+
+        public Task Debug(
+            string message,
+            [CallerFilePath] string filePath = "",
+            [CallerMemberName] string memberName = "",
+            [CallerLineNumber] int lineNumber = 0)
+        {
+            if (!_logger.IsEnabled(LogLevel.Debug))
+                return Task.CompletedTask;
+
+            return Log(LogLevel.Debug.ToString(), message, Path.GetFileName(filePath), memberName, lineNumber);
+        }
+        public Task Info<T>(
+        string message,
+        T? variable = default,
+        [CallerFilePath] string filePath = "",
+        [CallerMemberName] string memberName = "",
+        [CallerLineNumber] int lineNumber = 0,
+        [CallerArgumentExpression("variable")] string variableName = "") =>
+        Log(LogLevel.Information.ToString(), message, Path.GetFileName(filePath), memberName, lineNumber, GetMetaDate(variableName, variable));
 
         public Task Debug<T>(
             string message,
             T? variable = default,
-            string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0,
@@ -100,23 +119,62 @@ namespace MyFinanceService.APPLICATION.Services
             if (!_logger.IsEnabled(LogLevel.Debug))
                 return Task.CompletedTask;
 
-            var metadata = new Dictionary<string, object?> { { variableName, variable } };
-            var metaJson = JsonConvert.SerializeObject(metadata);
 
-            return Log(LogLevel.Debug.ToString(), message, userId, Path.GetFileName(filePath), memberName, lineNumber, metaJson);
+            return Log(LogLevel.Debug.ToString(), message, Path.GetFileName(filePath), memberName, lineNumber, GetMetaDate(variableName, variable));
         }
 
-        public Task Debug(
-            string message,
+        public void ChangeLog<T>(T variable, [CallerArgumentExpression("variable")] string variableName = "")
+        {
+            if (_currentChangeLog.Value == null)
+                _currentChangeLog.Value = new Dictionary<string, object?>();
+
+            if (!_currentChangeLog.Value.ContainsKey(variableName))
+                _currentChangeLog.Value[variableName] = new Dictionary<int, object?>();
+
+            var snapshots = (Dictionary<int, object?>)_currentChangeLog.Value[variableName]!;
+
+            var index = snapshots.Count;
+
+            // deep copy to avoid reference mutation
+            snapshots[index] = DeepCopy(variable);
+        }
+        public async Task FlushAsync(string message,
             string? userId = null,
             [CallerFilePath] string filePath = "",
             [CallerMemberName] string memberName = "",
             [CallerLineNumber] int lineNumber = 0)
         {
-            if (!_logger.IsEnabled(LogLevel.Debug))
-                return Task.CompletedTask;
+            if (_currentChangeLog.Value == null || !_currentChangeLog.Value.Any())
+                return;
 
-            return Log(LogLevel.Debug.ToString(), message, userId, Path.GetFileName(filePath), memberName, lineNumber);
+            var metaData = _currentChangeLog.Value;
+
+            // Clear the temporary storage for next session
+            _currentChangeLog.Value = null;
+
+            // Send to log
+            await LogAsync(new ActivityLogMessage
+            {
+                Level = LogLevel.Information.ToString(),
+                Message = message,
+                UserId = userId ?? GetUserIdFromJwt(),
+                Action = $"{Path.GetFileName(filePath)}::{memberName} line {lineNumber}",
+                Metadata = metaData
+            });
+        }
+
+        private object GetMetaDate<T>(string variableName, T? variable)
+        {
+            var metadata = new Dictionary<string, object?> { { variableName, variable } };
+            return JsonConvert.SerializeObject(metadata);
+        }
+        private T DeepCopy<T>(T source)
+        {
+            if (source == null)
+                return default!;
+
+            var json = JsonConvert.SerializeObject(source);
+            return JsonConvert.DeserializeObject<T>(json)!;
         }
     }
 }

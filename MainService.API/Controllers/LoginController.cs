@@ -18,11 +18,11 @@ namespace MainService.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            await _logService.Debug("User tries to log in");
+            await _logService.Debug("Started Execution");
             var result = await _loginService.AuthenticateAsync(loginRequest.Username, loginRequest.Password);
             if (result.Success)
             {
-                await _logService.Debug("Login successful");
+                await _logService.Debug("Execution Ended");
                 return Ok(result);
             }
             else

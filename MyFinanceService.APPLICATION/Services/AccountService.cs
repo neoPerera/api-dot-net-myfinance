@@ -1,13 +1,14 @@
-﻿using MyFinanceService.APPLICATION.DTOs;
+﻿using Microsoft.AspNetCore.Http;
+using MyFinanceService.APPLICATION.DTOs;
 using MyFinanceService.APPLICATION.Interfaces;
 using MyFinanceService.CORE.Entities;
 using MyFinanceService.CORE.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using Npgsql;
 
 namespace MyFinanceService.APPLICATION.Services
 {
-    public class AccountService(IHttpContextAccessor _httpContextAccessor, ICommonRepository _commonRepository) : IAccountService
+    public class AccountService(IHttpContextAccessor _httpContextAccessor, ICommonRepository _commonRepository, IActivityLogService _logService) : IAccountService
     {
         public async Task<CommonResponse> AddAccountAsync(AddRefRequest request)
         {
@@ -24,6 +25,7 @@ namespace MyFinanceService.APPLICATION.Services
             try
             {
                 await _commonRepository.SaveAsync<Account>(Entity);
+                await _logService.Info("Added New Account", variable:Entity);
                 return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)
@@ -59,18 +61,20 @@ namespace MyFinanceService.APPLICATION.Services
             try
             {
                 // Fetch the existing entity by ID
-                var existingEntity = await _commonRepository.GetByIdAsync<Account>(request.Str_id);
-                if (existingEntity == null)
+                var Entity = await _commonRepository.GetByIdAsync<Account>(request.Str_id);
+                if (Entity == null)
                 {
                     return new ResponseService<CommonResponse>("Income record not found.").Response;
                 }
+                _logService.ChangeLog(Entity.Name);
+                Entity.Name = request.Updates.Str_name;
 
-                // Update the column(s)
-                existingEntity.Name = request.Updates.Str_name;
-
+                _logService.ChangeLog(Entity.Name);
                 // Save changes
-                await _commonRepository.UpdateAsync<Account>(existingEntity);
+                await _commonRepository.UpdateAsync<Account>(Entity);
 
+
+                await _logService.FlushAsync("Account Updated");
                 return new ResponseService<CommonResponse>().Response;
             }
             catch (Exception e)

@@ -1,4 +1,5 @@
 ﻿using MainService.APPLICATION.Interfaces;
+using MainService.APPLICATION.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,13 +10,13 @@ namespace MainService.API.Controllers
     {
         private readonly IFormService _formService;
         private readonly IConfiguration _configuration;
-        private readonly IActivityLogService _activityLog;
+        private readonly IActivityLogService _logService;
 
-        public HomeController(IFormService formService, IConfiguration configuration, IActivityLogService activityLog)
+        public HomeController(IFormService formService, IConfiguration configuration, IActivityLogService logService)
         {
             _formService = formService;
             _configuration = configuration;
-            _activityLog = activityLog;
+            _logService = logService;
         }
 
         [HttpGet]
@@ -44,9 +45,9 @@ namespace MainService.API.Controllers
         public async Task<IActionResult> GetActiveForms()
         {
             var username = User.Identity?.Name;
-            await _activityLog.Debug("Started Execution",variable:username);
+            await _logService.Debug("Started Execution",variable:username);
             var forms = await _formService.GetActiveFormsAsync(username);
-            await _activityLog.Debug("Started Ended", variable: forms);
+            await _logService.Debug("Started Ended", variable: forms);
 
             return Ok(forms);
         }
