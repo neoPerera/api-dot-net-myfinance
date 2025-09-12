@@ -9,11 +9,13 @@ namespace MainService.API.Controllers
     {
         private readonly IFormService _formService;
         private readonly IConfiguration _configuration;
+        private readonly IActivityLogService _activityLog;
 
-        public HomeController(IFormService formService, IConfiguration configuration)
+        public HomeController(IFormService formService, IConfiguration configuration, IActivityLogService activityLog)
         {
             _formService = formService;
             _configuration = configuration;
+            _activityLog = activityLog;
         }
 
         [HttpGet]
@@ -42,7 +44,10 @@ namespace MainService.API.Controllers
         public async Task<IActionResult> GetActiveForms()
         {
             var username = User.Identity?.Name;
+            await _activityLog.Debug("Started Execution",variable:username);
             var forms = await _formService.GetActiveFormsAsync(username);
+            await _activityLog.Debug("Started Ended", variable: forms);
+
             return Ok(forms);
         }
     }

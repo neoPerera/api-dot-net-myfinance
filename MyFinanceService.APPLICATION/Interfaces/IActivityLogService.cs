@@ -1,13 +1,17 @@
-﻿using MainService.Application.DTOs;
+﻿using MyFinanceService.Application.DTOs;
 using System.Runtime.CompilerServices;
 
-namespace MainService.APPLICATION.Interfaces
+namespace MyFinanceService.APPLICATION.Interfaces
 {
     /// <summary>
     /// Defines a service for logging activity messages.
     /// </summary>
     public interface IActivityLogService
     {
+
+        /// <summary>
+        /// Convenience methods for common log levels
+        /// </summary>
         Task Info(
                     string message,
                     string? userId = null,

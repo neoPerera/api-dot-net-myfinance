@@ -5,6 +5,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Confluent.Kafka" Version="2.11.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

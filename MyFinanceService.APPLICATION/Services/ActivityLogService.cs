@@ -1,13 +1,13 @@
-﻿using Confluent.Kafka;
-using MainService.Application.DTOs;
-using MainService.APPLICATION.Interfaces;
+﻿using MyFinanceService.Application.DTOs;
+using MyFinanceService.APPLICATION.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
+using System.Runtime.CompilerServices;
+using System.IO;
 
-namespace MainService.APPLICATION.Services
+namespace MyFinanceService.APPLICATION.Services
 {
     public class ActivityLogService : IActivityLogService
     {
@@ -29,7 +29,7 @@ namespace MainService.APPLICATION.Services
         {
             var user = _httpContextAccessor.HttpContext?.User;
             if (user == null || !user.Identity?.IsAuthenticated == true)
-                return "UNAUTH";
+                return null;
 
             return user.FindFirst(ClaimTypes.NameIdentifier)?.Value
                    ?? user.FindFirst("sub")?.Value
@@ -60,7 +60,7 @@ namespace MainService.APPLICATION.Services
                 Message = message,
                 UserId = userId ?? GetUserIdFromJwt(),
                 Action = action,
-                Metadata = metaData ?? new { }
+                Metadata = metaData
             });
         }
 

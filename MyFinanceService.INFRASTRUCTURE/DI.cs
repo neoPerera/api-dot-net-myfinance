@@ -1,12 +1,11 @@
 using MyFinanceService.APPLICATION.Interfaces;
 using MyFinanceService.APPLICATION.Services;
-using MyFinanceService.INFRASTRUCTURE.Repositories;
-using MyFinanceService.INFRASTRUCTURE.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using MyFinanceService.CORE.Interfaces;
+using MyFinanceService.INFRASTRUCTURE.Persistence;
+using MyFinanceService.INFRASTRUCTURE.Repositories;
 
 namespace MyFinanceService.INFRASTRUCTURE
 {
@@ -25,7 +24,10 @@ namespace MyFinanceService.INFRASTRUCTURE
             // Common Services
             services.AddScoped<ICommonRepository, CommonRepository>();
             services.AddScoped<IDashboardRepository, DashboardRepository>();
-            
+
+            services.AddScoped<IActivityLogService, ActivityLogService>();
+            services.AddScoped<IKafkaProducerService, KafkaProducerService>();
+
             return services;
         }
 

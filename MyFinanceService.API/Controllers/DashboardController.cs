@@ -10,10 +10,12 @@ namespace MyFinanceService.API.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly IDashboardService _dashboardService;
+        private readonly IActivityLogService _logService;
 
-        public DashboardController(IDashboardService dashboardService)
+        public DashboardController(IDashboardService dashboardService, IActivityLogService logService)
         {
             _dashboardService = dashboardService;
+            _logService = logService;
         }
 
 
@@ -21,7 +23,10 @@ namespace MyFinanceService.API.Controllers
         [Route("getdashboardaccountbalances")]
         public async Task<IActionResult> GetDashboardAccountBalances()
         {
+            await _logService.Debug("Execution started");
             var result = await _dashboardService.GetDashboardAccountBalancesAsync();
+            await _logService.Debug("Execution ended",result);
+
             return StatusCode(result.StatusCode, result.Data);
         }
 
@@ -29,15 +34,20 @@ namespace MyFinanceService.API.Controllers
         [Route("getdashboardaccountincomes")]
         public async Task<IActionResult> GetDashboardAccountIncomes()
         {
+            await _logService.Debug("Execution started");
             var result = await _dashboardService.GetDashboardAccountIncomesAsync();
+            await _logService.Debug("Execution ended", result);
             return StatusCode(result.StatusCode, result.Data);
+
         }
 
         [HttpGet]
         [Route("getdashboardaccountexpenses")]
         public async Task<IActionResult> GetDashboardAccountExpenses()
         {
+            await _logService.Debug("Execution started");
             var result = await _dashboardService.GetDashboardAccountExpensesAsync();
+            await _logService.Debug("Execution ended", result);
             return StatusCode(result.StatusCode, result.Data);
         }
 
@@ -45,7 +55,10 @@ namespace MyFinanceService.API.Controllers
         [Route("getdashboardtransactions")]
         public async Task<IActionResult> GetDashboardTransactions()
         {
+            await _logService.Debug("Execution started");
             var result = await _dashboardService.GetDashboardTransactionsAsync();
+            int x = 123;
+            await _logService.Debug("Execution ended", x);
             return StatusCode(result.StatusCode, result.Data);
         }
     }
