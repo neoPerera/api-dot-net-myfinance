@@ -5,5 +5,6 @@ namespace MainService.APPLICATION.Interfaces
     public interface ILogin
     {
         Task<LoginResponse> AuthenticateAsync(string username, string password);
+        Task<LoginResponse> AuthenticateMobileAsync(string username, string password);
     }
 }

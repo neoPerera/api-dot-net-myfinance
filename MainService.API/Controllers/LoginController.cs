@@ -31,5 +31,21 @@ namespace MainService.API.Controllers
                 return Unauthorized(new { message = result.Message });
             }
         }
+
+        [HttpPost("mobile")]
+        public async Task<IActionResult> LoginMobile([FromBody] LoginRequest loginRequest)
+        {
+            await _logService.Debug("Started Mobile Login Execution");
+            var result = await _loginService.AuthenticateMobileAsync(loginRequest.Username, loginRequest.Password);
+            if (result.Success)
+            {
+                await _logService.Debug("Mobile Login Execution Ended");
+                return Ok(result);
+            }
+            else
+            {
+                return Unauthorized(new { message = result.Message });
+            }
+        }
     }
 }

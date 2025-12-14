@@ -29,6 +29,20 @@ namespace MainService.APPLICATION.Services
             return new LoginResponse(true, "Login successful", token);
         }
 
+        public async Task<LoginResponse> AuthenticateMobileAsync(string username, string password)
+        {
+            var user = await _commonRepository.GetFirstOrDefaultAsync<User>(filter: u => u.Username == username);
+            if (user == null || password != user.Password)
+            {
+                return new LoginResponse(false, "Login unsuccessful");
+            }
+            var token = GenerateJwtTokenMobile(username);
+            _logService.ChangeLog(username);
+            _logService.ChangeLog(token);
+            await _logService.FlushAsync("Mobile Login Successful");
+            return new LoginResponse(true, "Login successful", token);
+        }
+
         private string GenerateJwtToken(string username)
         {
             var claims = new[]
@@ -41,6 +55,30 @@ namespace MainService.APPLICATION.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddHours(2);
+
+            var token = new JwtSecurityToken(
+                issuer: "your-app",
+                audience: "your-app",
+                claims: claims,
+                expires: expires,
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private string GenerateJwtTokenMobile(string username)
+        {
+            var claims = new[]
+            {
+                   new Claim(JwtRegisteredClaimNames.Sub, username),
+                   new Claim(ClaimTypes.Name, username),
+                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+               };
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecretKey));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddDays(7); // 1 week expiration for mobile
 
             var token = new JwtSecurityToken(
                 issuer: "your-app",
