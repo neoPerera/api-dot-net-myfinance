@@ -28,7 +28,7 @@ namespace MainService.APPLICATION.Services
                     _logService.ChangeLog(username);
                     _logService.ChangeLog(authResponse.Token);
                     await _logService.FlushAsync("Login Successful using Auth API");
-                    return new LoginResponse(true, "Login Successful", authResponse.Token);
+                    return new LoginResponse(true, "Login successful", authResponse.Token);
                 }
                 else
                 {
