@@ -7,16 +7,36 @@ using MainService.CORE.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using MainService.CORE.Entities;
+using ExternalAuth;
 
 
 namespace MainService.APPLICATION.Services
 {
-    public class LoginService(ICommonRepository _commonRepository, IConfiguration configuration, IActivityLogService _logService) : ILogin
+    public class LoginService(ICommonRepository _commonRepository, IConfiguration configuration, IActivityLogService _logService, IExternalAuthServiceClient authServiceClient) : ILogin
     {
         private readonly string _jwtSecretKey = configuration["JwtSecretKey"] ?? throw new ArgumentNullException(nameof(configuration), "JwtSecretKey is not configured.");
+        private readonly bool _useAuth = bool.TryParse(configuration["useAuth"], out var useAuthValue) && useAuthValue;
 
         public async Task<LoginResponse> AuthenticateAsync(string username, string password)
         {
+            // If useAuth is true, forward to Auth API
+            if (_useAuth)
+            {
+                var authResponse = await authServiceClient.LoginAsync(username, password);
+                if (authResponse != null && authResponse.Success)
+                {
+                    _logService.ChangeLog(username);
+                    _logService.ChangeLog(authResponse.Token);
+                    await _logService.FlushAsync("Login Successful using Auth API");
+                    return new LoginResponse(true, "Login Successful", authResponse.Token);
+                }
+                else
+                {
+                    return new LoginResponse(false, authResponse?.Message ?? "Login unsuccessful");
+                }
+            }
+
+            // Original logic when useAuth is false
             var user = await _commonRepository.GetFirstOrDefaultAsync<User>(filter: u => u.Username == username);
             if (user == null || password != user.Password)
             {
@@ -31,6 +51,24 @@ namespace MainService.APPLICATION.Services
 
         public async Task<LoginResponse> AuthenticateMobileAsync(string username, string password)
         {
+            // If useAuth is true, forward to Auth API
+            if (_useAuth)
+            {
+                var authResponse = await authServiceClient.LoginAsync(username, password);
+                if (authResponse != null && authResponse.Success)
+                {
+                    _logService.ChangeLog(username);
+                    _logService.ChangeLog(authResponse.Token);
+                    await _logService.FlushAsync("Mobile Login Successful");
+                    return new LoginResponse(true, authResponse.Message, authResponse.Token);
+                }
+                else
+                {
+                    return new LoginResponse(false, authResponse?.Message ?? "Login unsuccessful");
+                }
+            }
+
+            // Original logic when useAuth is false
             var user = await _commonRepository.GetFirstOrDefaultAsync<User>(filter: u => u.Username == username);
             if (user == null || password != user.Password)
             {

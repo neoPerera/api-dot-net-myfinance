@@ -1,7 +1,10 @@
 using MyFinanceService.INFRASTRUCTURE;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
+using ExternalAuth;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,11 +26,50 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "MyFinanceService API",
+        Version = "v1"
+    });
+    
+    // Add JWT Bearer authentication to Swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 // Register services for DI
 builder.Services.AddApplicationServices();
+
+// Check useAuth setting
+var useAuth = builder.Configuration.GetValue<bool>("useAuth", false);
+
+// Add external auth service (replaces manual HTTP client setup when useAuth is true)
+// This registers IExternalAuthServiceClient which is used by both middleware and LoginService
+builder.Services.AddExternalAuthService(builder.Configuration);
 
 // Add CORS services
 builder.Services.AddCors(options =>
@@ -41,22 +83,33 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAuthentication(options =>
+
+if (!useAuth)
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+    // Use generic JWT validation
+    builder.Services.AddAuthentication(options =>
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey"]))
-    };
-});
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey"] ?? throw new InvalidOperationException("JwtSecretKey is not configured")))
+        };
+    });
+}
+else
+{
+    // Use external auth service - middleware will validate tokens and set up user identity
+    // No authentication scheme needed since middleware handles it
+    builder.Services.AddAuthentication();
+}
 
 
 var app = builder.Build();
@@ -74,8 +127,15 @@ app.UseCors("AllowFrontend");
 // HTTPS redirection is handled by Cloudflare, so we don't need this
 // app.UseHttpsRedirection();
 
-app.UseAuthentication();  // Add Authentication middleware
-app.UseAuthorization();   // Add Authorization middleware
+// Add external auth validation middleware (before authentication/authorization)
+if (useAuth)
+{
+    app.UseExternalAuthValidation();
+}
+
+// Add authentication and authorization middleware
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
